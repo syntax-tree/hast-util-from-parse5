@@ -164,7 +164,142 @@ test('hast-util-from-parse5', function (t) {
     'should accept a file as options'
   );
 
-  // console.log(JSON.stringify(fromParse5(parse5.parse(input, {locationInfo: true}), file), 0, 2));
+  t.deepEqual(
+    fromParse5(parse5.parse(input), file),
+    {
+      type: 'root',
+      children: [
+        {
+          type: 'element',
+          tagName: 'html',
+          properties: {},
+          children: [
+            {
+              type: 'element',
+              tagName: 'head',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'title',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'Hello!'
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              type: 'element',
+              tagName: 'body',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'h1',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'World!'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      data: {quirksMode: true}
+    },
+    'should accept a file as options (without location info)'
+  );
+
+  t.deepEqual(
+    fromParse5({
+      nodeName: 'title',
+      tagName: 'title',
+      attrs: [],
+      namespaceURI: 'http://www.w3.org/1999/xhtml',
+      childNodes: [{
+        nodeName: '#text',
+        value: 'Hello!',
+        __location: {}
+      }],
+      __location: {
+        line: 1,
+        col: 1,
+        startOffset: 0,
+        endOffset: 21,
+        startTag: {line: 1, col: 1, startOffset: 0, endOffset: null},
+        endTag: {}
+      }
+    }, file),
+    {
+      type: 'element',
+      tagName: 'title',
+      properties: {},
+      children: [
+        {
+          type: 'text',
+          value: 'Hello!'
+        }
+      ],
+      position: {
+        start: {column: 1, line: 1, offset: 0},
+        end: {column: 22, line: 1, offset: 21}
+      }
+    },
+    'should support synthetic locations'
+  );
+
+  t.deepEqual(
+    fromParse5({
+      nodeName: 'p',
+      tagName: 'p',
+      attrs: [],
+      namespaceURI: 'http://www.w3.org/1999/xhtml',
+      childNodes: [{
+        nodeName: '#text',
+        value: 'Hello!',
+        __location: {
+          line: 1,
+          col: 1,
+          startOffset: 0,
+          endOffset: null
+        }
+      }],
+      __location: {
+        line: 1,
+        col: 1,
+        startOffset: 0,
+        endOffset: 21,
+        startTag: {line: 1, col: 1, startOffset: 0, endOffset: null}
+      }
+    }, file),
+    {
+      type: 'element',
+      tagName: 'p',
+      properties: {},
+      children: [{
+        type: 'text',
+        value: 'Hello!',
+        position: {
+          start: {column: 1, line: 1, offset: 0},
+          end: null
+        }
+      }],
+      position: {
+        start: {column: 1, line: 1, offset: 0},
+        end: null
+      }
+    },
+    'should support synthetic locations on unclosed elements'
+  );
+
   t.end();
 });
 

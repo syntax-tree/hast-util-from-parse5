@@ -48,7 +48,8 @@ function wrapper(ast, options) {
   return transform(ast, {
     file: file,
     toPosition: file ? vfileLocation(file).toPosition : null,
-    verbose: settings.verbose
+    verbose: settings.verbose,
+    location: false
   });
 }
 
@@ -63,6 +64,7 @@ function transform(ast, config) {
   var fn = has(map, ast.nodeName) ? map[ast.nodeName] : element;
   var children;
   var node;
+  var position;
 
   if (ast.childNodes) {
     children = nodes(ast.childNodes, config);
@@ -71,7 +73,12 @@ function transform(ast, config) {
   node = fn(ast, children, config);
 
   if (ast.__location && config.toPosition) {
-    node.position = location(ast.__location, ast, node, config);
+    config.location = true;
+    position = location(ast.__location, ast, node, config);
+
+    if (position) {
+      node.position = position;
+    }
   }
 
   return node;
@@ -115,7 +122,7 @@ function root(ast, children, config) {
     }
   };
 
-  if (config.file) {
+  if (config.file && config.location) {
     node.position = location({
       startOffset: 0,
       endOffset: String(config.file).length
@@ -206,6 +213,7 @@ function loc(toPosition, dirty) {
  * @return {Location} - Start and end positions.
  */
 function location(info, ast, node, config) {
+  var start = info.startOffset;
   var end = info.endOffset;
   var values = info.attrs || {};
   var propPositions = {};
@@ -224,7 +232,11 @@ function location(info, ast, node, config) {
 
     /* Unclosed with children: */
     if (reference && reference.position) {
-      end = reference.position.end.offset;
+      if (reference.position.end) {
+        end = reference.position.end.offset;
+      } else {
+        end = null;
+      }
     /* Unclosed without children: */
     } else if (info.startTag) {
       end = info.startTag.endOffset;
@@ -241,8 +253,12 @@ function location(info, ast, node, config) {
     };
   }
 
-  return {
-    start: config.toPosition(info.startOffset),
-    end: config.toPosition(end)
-  };
+  start = typeof start === 'number' ? config.toPosition(start) : null;
+  end = typeof end === 'number' ? config.toPosition(end) : null;
+
+  if (!start && !end) {
+    return undefined;
+  }
+
+  return {start: start, end: end};
 }
