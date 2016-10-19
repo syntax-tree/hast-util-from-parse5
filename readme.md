@@ -72,7 +72,7 @@ If given, the file should have the original HTML source as its contents.
 ###### `options.verbose`
 
 Whether to add positional information about starting tags, closing tags,
-and attributes to elements (`boolean`, default: `false`). Note: not used
+and attributes to elements (`boolean`, default: `false`).  Note: not used
 without `file`.
 
 For the following HTML:
