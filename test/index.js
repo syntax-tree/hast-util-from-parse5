@@ -1,11 +1,3 @@
-/**
- * @author Titus Wormer
- * @copyright 2016 Titus Wormer
- * @license MIT
- * @module hast-util-from-parse5
- * @fileoverview Test suite for `hast-util-from-parse5`.
- */
-
 'use strict';
 
 /* Dependencies. */
