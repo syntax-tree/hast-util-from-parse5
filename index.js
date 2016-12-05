@@ -84,7 +84,7 @@ function root(ast, children, config) {
     type: 'root',
     children: children,
     data: {
-      quirksMode: ast.quirksMode
+      quirksMode: ast.mode === 'quirks' || ast.mode === 'limited-quirks'
     }
   };
 
