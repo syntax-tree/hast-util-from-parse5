@@ -129,13 +129,13 @@ The verbose info would looks as follows:
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/wooorm/hast-util-from-parse5.svg
+[travis-badge]: https://img.shields.io/travis/syntax-tree/hast-util-from-parse5.svg
 
-[travis]: https://travis-ci.org/wooorm/hast-util-from-parse5
+[travis]: https://travis-ci.org/syntax-tree/hast-util-from-parse5
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/hast-util-from-parse5.svg
+[codecov-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-parse5.svg
 
-[codecov]: https://codecov.io/github/wooorm/hast-util-from-parse5
+[codecov]: https://codecov.io/github/syntax-tree/hast-util-from-parse5
 
 [npm-install]: https://docs.npmjs.com/cli/install
 
@@ -143,10 +143,10 @@ The verbose info would looks as follows:
 
 [author]: http://wooorm.com
 
-[hast]: https://github.com/wooorm/hast
+[hast]: https://github.com/syntax-tree/hast
 
 [ast]: https://github.com/inikulin/parse5/wiki/Documentation
 
-[node]: https://github.com/wooorm/hast#ast
+[node]: https://github.com/syntax-tree/hast#ast
 
-[vfile]: https://github.com/wooorm/vfile
+[vfile]: https://github.com/vfile/vfile

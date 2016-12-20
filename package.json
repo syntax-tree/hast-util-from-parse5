@@ -12,8 +12,8 @@
   "files": [
     "index.js"
   ],
-  "repository": "https://github.com/wooorm/hast-util-from-parse5",
-  "bugs": "https://github.com/wooorm/hast-util-from-parse5/issues",
+  "repository": "https://github.com/syntax-tree/hast-util-from-parse5",
+  "bugs": "https://github.com/syntax-tree/hast-util-from-parse5/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"
