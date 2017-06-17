@@ -12,46 +12,41 @@ npm install hast-util-from-parse5
 
 ## Usage
 
-Dependencies:
+Say we have the following file, `example.html`:
+
+```html
+<!doctype html><title>Hello!</title><h1 id="world">World!<!--after-->
+```
+
+And our script, `example.js`, looks as follows:
 
 ```javascript
+var vfile = require('to-vfile');
 var parse5 = require('parse5');
 var inspect = require('unist-util-inspect');
-var vfile = require('vfile');
 var fromParse5 = require('hast-util-from-parse5');
+
+var doc = vfile.readSync('example.html')
+var ast = parse5.parse(String(doc), {locationInfo: true});
+var hast = fromParse5(ast, doc);
+
+console.log(inspect(hast));
 ```
 
-Fixture:
+Now, running `node example` yields:
 
-```javascript
-var doc = '<!doctype html><title>Hello!</title><h1 id="world">World!<!--after-->';
-```
-
-Parse:
-
-```javascript
-var ast = parse5.parse(doc, {locationInfo: true});
-```
-
-Transform:
-
-```javascript
-var hast = fromParse5(ast, vfile(doc));
-```
-
-Yields:
-
-```txt
-root[2] (1:1-1:70, 0-69) [data={"quirksMode":false}]
+```text
+root[2] (1:1-2:1, 0-70) [data={"quirksMode":false}]
 ├─ doctype (1:1-1:16, 0-15) [name="html"]
 └─ element[2] [tagName="html"]
    ├─ element[1] [tagName="head"]
    │  └─ element[1] (1:16-1:37, 15-36) [tagName="title"]
    │     └─ text: "Hello!" (1:23-1:29, 22-28)
    └─ element[1] [tagName="body"]
-      └─ element[2] (1:37-1:70, 36-69) [tagName="h1"][properties={"id":"world"}]
+      └─ element[3] (1:37-2:1, 36-70) [tagName="h1"][properties={"id":"world"}]
          ├─ text: "World!" (1:52-1:58, 51-57)
-         └─ comment: "after" (1:58-1:70, 57-69)
+         ├─ comment: "after" (1:58-1:70, 57-69)
+         └─ text: "\n" (1:70-2:1, 69-70)
 ```
 
 ## API
