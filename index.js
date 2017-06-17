@@ -4,11 +4,12 @@
 var information = require('property-information');
 var camelcase = require('camelcase');
 var vfileLocation = require('vfile-location');
-var has = require('has');
 var h = require('hastscript');
 
 /* Expose. */
 module.exports = wrapper;
+
+var own = {}.hasOwnProperty;
 
 /* Handlers. */
 var map = {
@@ -41,7 +42,7 @@ function wrapper(ast, options) {
 
 /* Transform a node. */
 function transform(ast, config) {
-  var fn = has(map, ast.nodeName) ? map[ast.nodeName] : element;
+  var fn = own.call(map, ast.nodeName) ? map[ast.nodeName] : element;
   var children;
   var node;
   var position;
