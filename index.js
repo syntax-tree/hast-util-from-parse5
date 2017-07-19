@@ -81,19 +81,25 @@ function nodes(children, config) {
 /* Transform a document.
  * Stores `ast.quirksMode` in `node.data.quirksMode`. */
 function root(ast, children, config) {
-  var node = {
-    type: 'root',
-    children: children,
-    data: {
-      quirksMode: ast.mode === 'quirks' || ast.mode === 'limited-quirks'
-    }
-  };
+  var quirks = ast.mode === 'quirks' || ast.mode === 'limited-quirks';
+  var node = {type: 'root', children: children};
+  var position;
 
-  if (config.file && config.location) {
-    node.position = location({
-      startOffset: 0,
-      endOffset: String(config.file).length
-    }, ast, node, config);
+  node.data = {quirksMode: quirks};
+
+  if (ast.__location) {
+    if (config.toPosition) {
+      config.location = true;
+      position = ast.__location;
+    }
+  } else if (config.file && config.location) {
+    position = {startOffset: 0, endOffset: String(config.file).length};
+  }
+
+  position = position && location(position, ast, node, config);
+
+  if (position) {
+    node.position = position;
   }
 
   return node;
@@ -120,19 +126,36 @@ function comment(ast) {
 }
 
 /* Transform an element. */
-function element(ast, children) {
+function element(ast, children, config) {
   var props = {};
   var values = ast.attrs;
   var length = values.length;
   var index = -1;
   var attr;
+  var node;
+  var fragment;
 
   while (++index < length) {
     attr = values[index];
     props[(attr.prefix ? attr.prefix + ':' : '') + attr.name] = attr.value;
   }
 
-  return h(ast.tagName, props, children);
+  node = h(ast.tagName, props, children);
+
+  if (ast.nodeName === 'template' && 'content' in ast) {
+    fragment = ast.content;
+
+    if (ast.__location) {
+      fragment.__location = {
+        startOffset: ast.__location.startTag.endOffset,
+        endOffset: ast.__location.endTag.startOffset
+      };
+    }
+
+    node.content = transform(ast.content, config);
+  }
+
+  return node;
 }
 
 /* Create clean positional information. */

@@ -389,4 +389,8 @@ function cleaner(node) {
   if (node.type === 'element') {
     delete node.data;
   }
+
+  if (node.content) {
+    clean(node.content);
+  }
 }
