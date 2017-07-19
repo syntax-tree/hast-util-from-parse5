@@ -4,8 +4,11 @@
 var fs = require('fs');
 var path = require('path');
 var test = require('tape');
+var not = require('not');
+var hidden = require('is-hidden');
 var vfile = require('vfile');
 var parse5 = require('parse5');
+var visit = require('unist-util-visit');
 var fromParse5 = require('..');
 
 /* Methods. */
@@ -298,28 +301,92 @@ test('hast-util-from-parse5', function (t) {
 /* Fixtures. */
 test('fixtures', function (t) {
   var base = join(__dirname, 'fixtures');
+  var entries = dir(base);
 
-  dir(base)
-    .filter(function (fixture) {
-      return fixture.charAt(0) !== '.';
-    })
-    .forEach(function (fixture) {
-      var filePath = join(base, fixture, 'index.json');
-      var input = read(join(base, fixture, 'index.html'), 'utf8');
-      var ast = parse5.parse(input, {locationInfo: true});
-      var doc = fromParse5(ast, {file: vfile(input), verbose: true});
-      var output;
+  t.plan(entries.length);
+  entries.filter(not(hidden)).forEach(each);
 
-      try {
-        output = read(filePath, 'utf8');
-      } catch (err) {
-        /* New fixture. */
-        write(filePath, JSON.stringify(doc, 0, 2) + '\n');
-        return;
-      }
+  function each(fixture) {
+    t.test(fixture, function (st) {
+      var opts = {
+        file: vfile(read(join(base, fixture, 'index.html'), 'utf8')),
+        out: join(base, fixture, 'index.json')
+      };
 
-      t.deepEqual(doc, JSON.parse(output), fixture);
+      st.plan(4);
+
+      checkYesYes(st, fixture, opts);
+      checkNoYes(st, fixture, opts);
+      checkYesNo(st, fixture, opts);
+      checkNoNo(st, fixture, opts);
     });
+  }
 
-  t.end();
+  function checkYesYes(t, fixture, options) {
+    var input = parse5.parse(String(options.file), {locationInfo: true});
+    var actual = fromParse5(input, {file: options.file, verbose: true});
+    var expected;
+
+    try {
+      expected = JSON.parse(read(options.out));
+    } catch (err) {
+      /* New fixture. */
+      write(options.out, JSON.stringify(actual, 0, 2) + '\n');
+      return;
+    }
+
+    t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position');
+  }
+
+  function checkYesNo(t, fixture, options) {
+    var input = parse5.parse(String(options.file), {locationInfo: true});
+    var actual = fromParse5(input);
+    var expected = JSON.parse(read(options.out));
+
+    clean(expected);
+
+    t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position');
+  }
+
+  function checkNoYes(t, fixture, options) {
+    var input = parse5.parse(String(options.file));
+    var actual = fromParse5(input, {file: options.file, verbose: true});
+    var expected = JSON.parse(read(options.out));
+
+    clean(expected);
+
+    t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position');
+  }
+
+  function checkNoNo(t, fixture, options) {
+    var input = parse5.parse(String(options.file), {locationInfo: true});
+    var actual = fromParse5(input);
+    var expected = JSON.parse(read(options.out));
+
+    clean(expected);
+
+    try {
+      require('assert').deepEqual(actual, expected, 'w/o position');
+    } catch (err) {
+      console.log('actual: ');
+      console.dir(actual, {depth: null});
+      console.log('expected: ');
+      console.dir(expected, {depth: null});
+    }
+
+    t.deepEqual(actual, expected, 'p5 w/o position, hast w/o intent of position');
+  }
 });
+
+function clean(tree) {
+  visit(tree, cleaner);
+}
+
+function cleaner(node) {
+  delete node.position;
+
+  /* Remove verbose data */
+  if (node.type === 'element') {
+    delete node.data;
+  }
+}
