@@ -4,7 +4,7 @@ Transform [HAST][] to [Parse5’s AST][ast].
 
 ## Installation
 
-[npm][npm-install]:
+[npm][]:
 
 ```bash
 npm install hast-util-from-parse5
@@ -26,7 +26,7 @@ var parse5 = require('parse5');
 var inspect = require('unist-util-inspect');
 var fromParse5 = require('hast-util-from-parse5');
 
-var doc = vfile.readSync('example.html')
+var doc = vfile.readSync('example.html');
 var ast = parse5.parse(String(doc), {locationInfo: true});
 var hast = fromParse5(ast, doc);
 
@@ -132,7 +132,7 @@ The verbose info would looks as follows:
 
 [codecov]: https://codecov.io/github/syntax-tree/hast-util-from-parse5
 
-[npm-install]: https://docs.npmjs.com/cli/install
+[npm]: https://docs.npmjs.com/cli/install
 
 [license]: LICENSE
 
