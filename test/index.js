@@ -1,6 +1,5 @@
 'use strict';
 
-/* Dependencies. */
 var fs = require('fs');
 var path = require('path');
 var test = require('tape');
@@ -11,13 +10,11 @@ var parse5 = require('parse5');
 var visit = require('unist-util-visit');
 var fromParse5 = require('..');
 
-/* Methods. */
 var join = path.join;
 var read = fs.readFileSync;
 var write = fs.writeFileSync;
 var dir = fs.readdirSync;
 
-/* Fixtures. */
 test('hast-util-from-parse5', function (t) {
   var input = '<title>Hello!</title><h1>World!';
   var file = vfile(input);
@@ -298,7 +295,6 @@ test('hast-util-from-parse5', function (t) {
   t.end();
 });
 
-/* Fixtures. */
 test('fixtures', function (t) {
   var base = join(__dirname, 'fixtures');
   var entries = dir(base);

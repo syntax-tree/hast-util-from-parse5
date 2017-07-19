@@ -1,12 +1,10 @@
 'use strict';
 
-/* Dependencies. */
 var information = require('property-information');
 var camelcase = require('camelcase');
 var vfileLocation = require('vfile-location');
 var h = require('hastscript');
 
-/* Expose. */
 module.exports = wrapper;
 
 var own = {}.hasOwnProperty;
