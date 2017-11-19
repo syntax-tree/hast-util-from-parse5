@@ -190,16 +190,13 @@ function location(info, ast, node, config) {
       } else {
         end = null;
       }
-    /* Unclosed without children: */
-    } else if (info.startTag) {
-      end = info.startTag.endOffset;
     }
   }
 
   if (config.verbose && node.type === 'element') {
     node.data = {
       position: {
-        opening: loc(config.toPosition, info.startTag || info),
+        opening: loc(config.toPosition, info.startTag),
         closing: info.endTag ? loc(config.toPosition, info.endTag) : null,
         properties: propPositions
       }
