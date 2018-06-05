@@ -2,8 +2,9 @@
 
 var information = require('property-information');
 var camelcase = require('camelcase');
-var vfileLocation = require('vfile-location');
 var h = require('hastscript');
+var xtend = require('xtend');
+var count = require('ccount');
 
 module.exports = wrapper;
 
@@ -32,7 +33,6 @@ function wrapper(ast, options) {
 
   return transform(ast, {
     file: file,
-    toPosition: file ? vfileLocation(file).toPosition : null,
     verbose: settings.verbose,
     location: false
   });
@@ -43,7 +43,7 @@ function transform(ast, config) {
   var fn = own.call(map, ast.nodeName) ? map[ast.nodeName] : element;
   var children;
   var node;
-  var position;
+  var pos;
 
   if (ast.childNodes) {
     children = nodes(ast.childNodes, config);
@@ -51,12 +51,12 @@ function transform(ast, config) {
 
   node = fn(ast, children, config);
 
-  if (ast.__location && config.toPosition) {
-    config.location = true;
-    position = location(ast.__location, ast, node, config);
+  if (ast.sourceCodeLocation && config.file) {
+    pos = location(node, ast.sourceCodeLocation, config.verbose);
 
-    if (position) {
-      node.position = position;
+    if (pos) {
+      config.location = true;
+      node.position = pos;
     }
   }
 
@@ -79,25 +79,18 @@ function nodes(children, config) {
 /* Transform a document.
  * Stores `ast.quirksMode` in `node.data.quirksMode`. */
 function root(ast, children, config) {
-  var quirks = ast.mode === 'quirks' || ast.mode === 'limited-quirks';
-  var node = {type: 'root', children: children};
-  var position;
+  var node = {type: 'root', children: children, data: {}};
+  var doc;
 
-  node.data = {quirksMode: quirks};
+  node.data.quirksMode = ast.mode === 'quirks' || ast.mode === 'limited-quirks';
 
-  if (ast.__location) {
-    if (config.toPosition) {
-      config.location = true;
-      position = ast.__location;
-    }
-  } else if (config.file && config.location) {
-    position = {startOffset: 0, endOffset: String(config.file).length};
-  }
+  if (config.file && config.location) {
+    doc = String(config.file);
 
-  position = position && location(position, ast, node, config);
-
-  if (position) {
-    node.position = position;
+    node.position = {
+      start: {line: 1, column: 1, offset: 0},
+      end: {line: count(doc, '\n') + 1, column: doc.length - doc.lastIndexOf('\n'), offset: doc.length}
+    };
   }
 
   return node;
@@ -131,7 +124,9 @@ function element(ast, children, config) {
   var index = -1;
   var attr;
   var node;
-  var fragment;
+  var pos;
+  var start;
+  var end;
 
   while (++index < length) {
     attr = values[index];
@@ -141,74 +136,65 @@ function element(ast, children, config) {
   node = h(ast.tagName, props, children);
 
   if (ast.nodeName === 'template' && 'content' in ast) {
-    fragment = ast.content;
-
-    if (ast.__location) {
-      fragment.__location = {
-        startOffset: ast.__location.startTag.endOffset,
-        endOffset: ast.__location.endTag.startOffset
-      };
-    }
+    pos = ast.sourceCodeLocation;
+    start = pos && pos.startTag && position(pos.startTag).end;
+    end = pos && pos.endTag && position(pos.endTag).start;
 
     node.content = transform(ast.content, config);
+
+    if ((start || end) && config.file) {
+      node.content.position = {start: start, end: end};
+    }
   }
 
   return node;
 }
 
 /* Create clean positional information. */
-function loc(toPosition, dirty) {
-  return {
-    start: toPosition(dirty.startOffset),
-    end: toPosition(dirty.endOffset)
-  };
-}
-
-/* Create clean positional information. */
-function location(info, ast, node, config) {
-  var start = info.startOffset;
-  var end = info.endOffset;
-  var values = info.attrs || {};
-  var propPositions = {};
+function location(node, location, verbose) {
+  var pos = position(location);
+  var reference;
+  var values;
+  var props;
   var prop;
   var name;
-  var reference;
 
-  for (prop in values) {
-    name = (information(prop) || {}).propertyName || camelcase(prop);
-    propPositions[name] = loc(config.toPosition, values[prop]);
-  }
-
-  /* Upstream: https://github.com/inikulin/parse5/issues/109 */
-  if (node.type === 'element' && !info.endTag) {
+  if (node.type === 'element') {
     reference = node.children[node.children.length - 1];
 
-    /* Unclosed with children: */
-    if (reference && reference.position) {
-      if (reference.position.end) {
-        end = reference.position.end.offset;
-      } else {
-        end = null;
+    /* Unclosed with children (upstream: https://github.com/inikulin/parse5/issues/109) */
+    if (!location.endTag && reference && reference.position && reference.position.end) {
+      pos.end = xtend(reference.position.end);
+    }
+
+    if (verbose) {
+      values = location.attrs;
+      props = {};
+
+      for (prop in values) {
+        name = (information(prop) || {}).propertyName || camelcase(prop);
+        props[name] = position(values[prop]);
       }
+
+      node.data = {
+        position: {
+          opening: position(location.startTag),
+          closing: location.endTag ? position(location.endTag) : null,
+          properties: props
+        }
+      };
     }
   }
 
-  if (config.verbose && node.type === 'element') {
-    node.data = {
-      position: {
-        opening: loc(config.toPosition, info.startTag),
-        closing: info.endTag ? loc(config.toPosition, info.endTag) : null,
-        properties: propPositions
-      }
-    };
-  }
+  return pos;
+}
 
-  start = typeof start === 'number' ? config.toPosition(start) : null;
-  end = typeof end === 'number' ? config.toPosition(end) : null;
+function position(loc) {
+  var start = point({line: loc.startLine, column: loc.startCol, offset: loc.startOffset});
+  var end = point({line: loc.endLine, column: loc.endCol, offset: loc.endOffset});
+  return start || end ? {start: start, end: end} : null;
+}
 
-  if (!start && !end) {
-    return undefined;
-  }
-
-  return {start: start, end: end};
+function point(point) {
+  return point.line && point.column ? point : null;
 }

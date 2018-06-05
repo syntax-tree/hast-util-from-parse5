@@ -27,7 +27,7 @@ var inspect = require('unist-util-inspect');
 var fromParse5 = require('hast-util-from-parse5');
 
 var doc = vfile.readSync('example.html');
-var ast = parse5.parse(String(doc), {locationInfo: true});
+var ast = parse5.parse(String(doc), {sourceCodeLocationInfo: true});
 var hast = fromParse5(ast, doc);
 
 console.log(inspect(hast));

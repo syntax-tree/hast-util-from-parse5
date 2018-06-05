@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var assert = require('assert');
 var test = require('tape');
 var not = require('not');
 var hidden = require('is-hidden');
@@ -83,7 +84,7 @@ test('hast-util-from-parse5', function (t) {
   );
 
   t.deepEqual(
-    fromParse5(parse5.parse(input, {locationInfo: true}), file),
+    fromParse5(parse5.parse(input, {sourceCodeLocationInfo: true}), file),
     {
       type: 'root',
       children: [
@@ -219,15 +220,12 @@ test('hast-util-from-parse5', function (t) {
       childNodes: [{
         nodeName: '#text',
         value: 'Hello!',
-        __location: {}
+        sourceCodeLocation: {}
       }],
-      __location: {
-        line: 1,
-        col: 1,
-        startOffset: 0,
-        endOffset: 21,
-        startTag: {line: 1, col: 1, startOffset: 0, endOffset: null},
-        endTag: {}
+      sourceCodeLocation: {
+        startLine: 1,
+        startCol: 1,
+        startOffset: 0
       }
     }, file),
     {
@@ -240,10 +238,7 @@ test('hast-util-from-parse5', function (t) {
           value: 'Hello!'
         }
       ],
-      position: {
-        start: {column: 1, line: 1, offset: 0},
-        end: {column: 22, line: 1, offset: 21}
-      }
+      position: {start: {line: 1, column: 1, offset: 0}, end: null}
     },
     'should support synthetic locations'
   );
@@ -257,19 +252,19 @@ test('hast-util-from-parse5', function (t) {
       childNodes: [{
         nodeName: '#text',
         value: 'Hello!',
-        __location: {
-          line: 1,
-          col: 1,
-          startOffset: 0,
-          endOffset: null
+        sourceCodeLocation: {
+          startLine: 1,
+          startCol: 4,
+          startOffset: 3,
+          endLine: 1,
+          endCol: 10,
+          endOffset: 9
         }
       }],
-      __location: {
-        line: 1,
-        col: 1,
-        startOffset: 0,
-        endOffset: 21,
-        startTag: {line: 1, col: 1, startOffset: 0, endOffset: null}
+      sourceCodeLocation: {
+        startLine: 1,
+        startCol: 1,
+        startOffset: 0
       }
     }, file),
     {
@@ -280,13 +275,13 @@ test('hast-util-from-parse5', function (t) {
         type: 'text',
         value: 'Hello!',
         position: {
-          start: {column: 1, line: 1, offset: 0},
-          end: null
+          start: {line: 1, column: 4, offset: 3},
+          end: {line: 1, column: 10, offset: 9}
         }
       }],
       position: {
-        start: {column: 1, line: 1, offset: 0},
-        end: null
+        start: {line: 1, column: 1, offset: 0},
+        end: {line: 1, column: 10, offset: 9}
       }
     },
     'should support synthetic locations on unclosed elements'
@@ -319,7 +314,7 @@ test('fixtures', function (t) {
   }
 
   function checkYesYes(t, fixture, options) {
-    var input = parse5.parse(String(options.file), {locationInfo: true});
+    var input = parse5.parse(String(options.file), {sourceCodeLocationInfo: true});
     var actual = fromParse5(input, {file: options.file, verbose: true});
     var expected;
 
@@ -331,17 +326,8 @@ test('fixtures', function (t) {
       return;
     }
 
+    log('yesyes', actual, expected);
     t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position');
-  }
-
-  function checkYesNo(t, fixture, options) {
-    var input = parse5.parse(String(options.file), {locationInfo: true});
-    var actual = fromParse5(input);
-    var expected = JSON.parse(read(options.out));
-
-    clean(expected);
-
-    t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position');
   }
 
   function checkNoYes(t, fixture, options) {
@@ -351,25 +337,29 @@ test('fixtures', function (t) {
 
     clean(expected);
 
+    log('noyes', actual, expected);
     t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position');
   }
 
-  function checkNoNo(t, fixture, options) {
-    var input = parse5.parse(String(options.file), {locationInfo: true});
+  function checkYesNo(t, fixture, options) {
+    var input = parse5.parse(String(options.file), {sourceCodeLocationInfo: true});
     var actual = fromParse5(input);
     var expected = JSON.parse(read(options.out));
 
     clean(expected);
 
-    try {
-      require('assert').deepEqual(actual, expected, 'w/o position');
-    } catch (err) {
-      console.log('actual: ');
-      console.dir(actual, {depth: null});
-      console.log('expected: ');
-      console.dir(expected, {depth: null});
-    }
+    log('yesno', actual, expected);
+    t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position');
+  }
 
+  function checkNoNo(t, fixture, options) {
+    var input = parse5.parse(String(options.file));
+    var actual = fromParse5(input);
+    var expected = JSON.parse(read(options.out));
+
+    clean(expected);
+
+    log('nono', actual, expected);
     t.deepEqual(actual, expected, 'p5 w/o position, hast w/o intent of position');
   }
 });
@@ -388,5 +378,16 @@ function cleaner(node) {
 
   if (node.content) {
     clean(node.content);
+  }
+}
+
+function log(label, actual, expected) {
+  try {
+    assert.deepEqual(actual, expected, label);
+  } catch (err) {
+    console.log('actual:%s: ', label);
+    console.dir(actual, {depth: null});
+    console.log('expected:%s: ', label);
+    console.dir(expected, {depth: null});
   }
 }
