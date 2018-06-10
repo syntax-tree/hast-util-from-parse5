@@ -35,6 +35,7 @@
     "not": "^0.1.0",
     "nyc": "^12.0.0",
     "parse5": "^5.0.0",
+    "prettier": "^1.13.5",
     "remark-cli": "^5.0.0",
     "remark-preset-wooorm": "^4.0.0",
     "tape": "^4.0.0",
@@ -43,17 +44,24 @@
     "xo": "^0.21.0"
   },
   "scripts": {
-    "build-md": "remark . -qfo",
+    "format": "remark . -qfo && prettier --write '**/*.js' && xo --fix",
     "build-bundle": "browserify index.js --bare -s hastUtilFromParse5 -g [ babelify --presets [ \"babel-preset-env\" ] ] > hast-util-from-parse5.js",
     "build-mangle": "esmangle hast-util-from-parse5.js > hast-util-from-parse5.min.js",
-    "build": "npm run build-md && npm run build-bundle && npm run build-mangle",
-    "lint": "xo",
+    "build": "npm run build-bundle && npm run build-mangle",
     "test-api": "node test",
     "test-coverage": "nyc --reporter lcov tape test",
-    "test": "npm run build && npm run lint && npm run test-coverage"
+    "test": "npm run format && npm run build && npm run test-coverage"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "semi": false,
+    "trailingComma": "none"
   },
   "xo": {
-    "space": true,
+    "prettier": true,
     "esnext": false,
     "rules": {
       "guard-for-in": "off"

@@ -21,16 +21,16 @@ Say we have the following file, `example.html`:
 And our script, `example.js`, looks as follows:
 
 ```javascript
-var vfile = require('to-vfile');
-var parse5 = require('parse5');
-var inspect = require('unist-util-inspect');
-var fromParse5 = require('hast-util-from-parse5');
+var vfile = require('to-vfile')
+var parse5 = require('parse5')
+var inspect = require('unist-util-inspect')
+var fromParse5 = require('hast-util-from-parse5')
 
-var doc = vfile.readSync('example.html');
-var ast = parse5.parse(String(doc), {sourceCodeLocationInfo: true});
-var hast = fromParse5(ast, doc);
+var doc = vfile.readSync('example.html')
+var ast = parse5.parse(String(doc), {sourceCodeLocationInfo: true})
+var hast = fromParse5(ast, doc)
 
-console.log(inspect(hast));
+console.log(inspect(hast))
 ```
 
 Now, running `node example` yields:

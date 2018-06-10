@@ -1,64 +1,68 @@
-'use strict';
+'use strict'
 
-var fs = require('fs');
-var path = require('path');
-var assert = require('assert');
-var test = require('tape');
-var not = require('not');
-var hidden = require('is-hidden');
-var vfile = require('vfile');
-var parse5 = require('parse5');
-var visit = require('unist-util-visit');
-var fromParse5 = require('..');
+var fs = require('fs')
+var path = require('path')
+var assert = require('assert')
+var test = require('tape')
+var not = require('not')
+var hidden = require('is-hidden')
+var vfile = require('vfile')
+var parse5 = require('parse5')
+var visit = require('unist-util-visit')
+var fromParse5 = require('..')
 
-var join = path.join;
-var read = fs.readFileSync;
-var write = fs.writeFileSync;
-var dir = fs.readdirSync;
+var join = path.join
+var read = fs.readFileSync
+var write = fs.writeFileSync
+var dir = fs.readdirSync
 
-test('hast-util-from-parse5', function (t) {
-  var input = '<title>Hello!</title><h1>World!';
-  var file = vfile(input);
+test('hast-util-from-parse5', function(t) {
+  var input = '<title>Hello!</title><h1>World!'
+  var file = vfile(input)
 
   t.deepEqual(
     fromParse5(parse5.parse(input)),
     {
       type: 'root',
-      children: [{
-        type: 'element',
-        tagName: 'html',
-        properties: {},
-        children: [
-          {
-            type: 'element',
-            tagName: 'head',
-            properties: {},
-            children: [{
+      children: [
+        {
+          type: 'element',
+          tagName: 'html',
+          properties: {},
+          children: [
+            {
               type: 'element',
-              tagName: 'title',
+              tagName: 'head',
               properties: {},
-              children: [{type: 'text', value: 'Hello!'}]
-            }]
-          },
-          {
-            type: 'element',
-            tagName: 'body',
-            properties: {},
-            children: [
-              {
-                type: 'element',
-                tagName: 'h1',
-                properties: {},
-                children: [{type: 'text', value: 'World!'}]
-              }
-            ]
-          }
-        ]
-      }],
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'title',
+                  properties: {},
+                  children: [{type: 'text', value: 'Hello!'}]
+                }
+              ]
+            },
+            {
+              type: 'element',
+              tagName: 'body',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'h1',
+                  properties: {},
+                  children: [{type: 'text', value: 'World!'}]
+                }
+              ]
+            }
+          ]
+        }
+      ],
       data: {quirksMode: true}
     },
     'should transform a complete document'
-  );
+  )
 
   t.deepEqual(
     fromParse5(parse5.parseFragment(input)),
@@ -81,7 +85,7 @@ test('hast-util-from-parse5', function (t) {
       data: {quirksMode: false}
     },
     'should transform a fragment'
-  );
+  )
 
   t.deepEqual(
     fromParse5(parse5.parse(input, {sourceCodeLocationInfo: true}), file),
@@ -155,7 +159,7 @@ test('hast-util-from-parse5', function (t) {
       }
     },
     'should accept a file as options'
-  );
+  )
 
   t.deepEqual(
     fromParse5(parse5.parse(input), file),
@@ -209,25 +213,30 @@ test('hast-util-from-parse5', function (t) {
       data: {quirksMode: true}
     },
     'should accept a file as options (without location info)'
-  );
+  )
 
   t.deepEqual(
-    fromParse5({
-      nodeName: 'title',
-      tagName: 'title',
-      attrs: [],
-      namespaceURI: 'http://www.w3.org/1999/xhtml',
-      childNodes: [{
-        nodeName: '#text',
-        value: 'Hello!',
-        sourceCodeLocation: {}
-      }],
-      sourceCodeLocation: {
-        startLine: 1,
-        startCol: 1,
-        startOffset: 0
-      }
-    }, file),
+    fromParse5(
+      {
+        nodeName: 'title',
+        tagName: 'title',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [
+          {
+            nodeName: '#text',
+            value: 'Hello!',
+            sourceCodeLocation: {}
+          }
+        ],
+        sourceCodeLocation: {
+          startLine: 1,
+          startCol: 1,
+          startOffset: 0
+        }
+      },
+      file
+    ),
     {
       type: 'element',
       tagName: 'title',
@@ -241,153 +250,168 @@ test('hast-util-from-parse5', function (t) {
       position: {start: {line: 1, column: 1, offset: 0}, end: null}
     },
     'should support synthetic locations'
-  );
+  )
 
   t.deepEqual(
-    fromParse5({
-      nodeName: 'p',
-      tagName: 'p',
-      attrs: [],
-      namespaceURI: 'http://www.w3.org/1999/xhtml',
-      childNodes: [{
-        nodeName: '#text',
-        value: 'Hello!',
+    fromParse5(
+      {
+        nodeName: 'p',
+        tagName: 'p',
+        attrs: [],
+        namespaceURI: 'http://www.w3.org/1999/xhtml',
+        childNodes: [
+          {
+            nodeName: '#text',
+            value: 'Hello!',
+            sourceCodeLocation: {
+              startLine: 1,
+              startCol: 4,
+              startOffset: 3,
+              endLine: 1,
+              endCol: 10,
+              endOffset: 9
+            }
+          }
+        ],
         sourceCodeLocation: {
           startLine: 1,
-          startCol: 4,
-          startOffset: 3,
-          endLine: 1,
-          endCol: 10,
-          endOffset: 9
+          startCol: 1,
+          startOffset: 0
         }
-      }],
-      sourceCodeLocation: {
-        startLine: 1,
-        startCol: 1,
-        startOffset: 0
-      }
-    }, file),
+      },
+      file
+    ),
     {
       type: 'element',
       tagName: 'p',
       properties: {},
-      children: [{
-        type: 'text',
-        value: 'Hello!',
-        position: {
-          start: {line: 1, column: 4, offset: 3},
-          end: {line: 1, column: 10, offset: 9}
+      children: [
+        {
+          type: 'text',
+          value: 'Hello!',
+          position: {
+            start: {line: 1, column: 4, offset: 3},
+            end: {line: 1, column: 10, offset: 9}
+          }
         }
-      }],
+      ],
       position: {
         start: {line: 1, column: 1, offset: 0},
         end: {line: 1, column: 10, offset: 9}
       }
     },
     'should support synthetic locations on unclosed elements'
-  );
+  )
 
-  t.end();
-});
+  t.end()
+})
 
-test('fixtures', function (t) {
-  var base = join(__dirname, 'fixtures');
-  var entries = dir(base);
+test('fixtures', function(t) {
+  var base = join(__dirname, 'fixtures')
+  var entries = dir(base)
 
-  t.plan(entries.length);
-  entries.filter(not(hidden)).forEach(each);
+  t.plan(entries.length)
+  entries.filter(not(hidden)).forEach(each)
 
   function each(fixture) {
-    t.test(fixture, function (st) {
+    t.test(fixture, function(st) {
       var opts = {
         file: vfile(read(join(base, fixture, 'index.html'), 'utf8')),
         out: join(base, fixture, 'index.json')
-      };
+      }
 
-      st.plan(4);
+      st.plan(4)
 
-      checkYesYes(st, fixture, opts);
-      checkNoYes(st, fixture, opts);
-      checkYesNo(st, fixture, opts);
-      checkNoNo(st, fixture, opts);
-    });
+      checkYesYes(st, fixture, opts)
+      checkNoYes(st, fixture, opts)
+      checkYesNo(st, fixture, opts)
+      checkNoNo(st, fixture, opts)
+    })
   }
 
   function checkYesYes(t, fixture, options) {
-    var input = parse5.parse(String(options.file), {sourceCodeLocationInfo: true});
-    var actual = fromParse5(input, {file: options.file, verbose: true});
-    var expected;
+    var input = parse5.parse(String(options.file), {
+      sourceCodeLocationInfo: true
+    })
+    var actual = fromParse5(input, {file: options.file, verbose: true})
+    var expected
 
     try {
-      expected = JSON.parse(read(options.out));
+      expected = JSON.parse(read(options.out))
     } catch (err) {
       /* New fixture. */
-      write(options.out, JSON.stringify(actual, 0, 2) + '\n');
-      return;
+      write(options.out, JSON.stringify(actual, 0, 2) + '\n')
+      return
     }
 
-    log('yesyes', actual, expected);
-    t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position');
+    log('yesyes', actual, expected)
+    t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position')
   }
 
   function checkNoYes(t, fixture, options) {
-    var input = parse5.parse(String(options.file));
-    var actual = fromParse5(input, {file: options.file, verbose: true});
-    var expected = JSON.parse(read(options.out));
+    var input = parse5.parse(String(options.file))
+    var actual = fromParse5(input, {file: options.file, verbose: true})
+    var expected = JSON.parse(read(options.out))
 
-    clean(expected);
+    clean(expected)
 
-    log('noyes', actual, expected);
-    t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position');
+    log('noyes', actual, expected)
+    t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position')
   }
 
   function checkYesNo(t, fixture, options) {
-    var input = parse5.parse(String(options.file), {sourceCodeLocationInfo: true});
-    var actual = fromParse5(input);
-    var expected = JSON.parse(read(options.out));
+    var input = parse5.parse(String(options.file), {
+      sourceCodeLocationInfo: true
+    })
+    var actual = fromParse5(input)
+    var expected = JSON.parse(read(options.out))
 
-    clean(expected);
+    clean(expected)
 
-    log('yesno', actual, expected);
-    t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position');
+    log('yesno', actual, expected)
+    t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position')
   }
 
   function checkNoNo(t, fixture, options) {
-    var input = parse5.parse(String(options.file));
-    var actual = fromParse5(input);
-    var expected = JSON.parse(read(options.out));
+    var input = parse5.parse(String(options.file))
+    var actual = fromParse5(input)
+    var expected = JSON.parse(read(options.out))
 
-    clean(expected);
+    clean(expected)
 
-    log('nono', actual, expected);
-    t.deepEqual(actual, expected, 'p5 w/o position, hast w/o intent of position');
+    log('nono', actual, expected)
+    t.deepEqual(
+      actual,
+      expected,
+      'p5 w/o position, hast w/o intent of position'
+    )
   }
-});
+})
 
 function clean(tree) {
-  visit(tree, cleaner);
+  visit(tree, cleaner)
 }
 
 function cleaner(node) {
-  delete node.position;
+  delete node.position
 
   /* Remove verbose data */
   if (node.type === 'element') {
-    delete node.data;
+    delete node.data
   }
 
   if (node.content) {
-    clean(node.content);
+    clean(node.content)
   }
 }
 
 function log(label, actual, expected) {
   try {
-    assert.deepEqual(actual, expected, label);
+    assert.deepEqual(actual, expected, label)
   } catch (err) {
-    console.log('actual:%s: ', label);
-    console.dir(actual, {depth: null});
-    console.log('expected:%s: ', label);
-    console.dir(expected, {depth: null});
+    console.log('actual:%s: ', label)
+    console.dir(actual, {depth: null})
+    console.log('expected:%s: ', label)
+    console.dir(expected, {depth: null})
   }
 }
