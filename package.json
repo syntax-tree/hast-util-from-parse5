@@ -1,6 +1,6 @@
 {
   "name": "hast-util-from-parse5",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Transform Parse5’s AST to HAST",
   "license": "MIT",
   "keywords": [
