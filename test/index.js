@@ -6,22 +6,18 @@ var assert = require('assert')
 var test = require('tape')
 var not = require('not')
 var hidden = require('is-hidden')
-var vfile = require('vfile')
+var vfile = require('to-vfile')
 var parse5 = require('parse5')
 var visit = require('unist-util-visit')
 var fromParse5 = require('..')
 
 var join = path.join
-var read = fs.readFileSync
-var write = fs.writeFileSync
-var dir = fs.readdirSync
 
 test('hast-util-from-parse5', function(t) {
-  var input = '<title>Hello!</title><h1>World!'
-  var file = vfile(input)
+  var file = vfile({contents: '<title>Hello!</title><h1>World!'})
 
   t.deepEqual(
-    fromParse5(parse5.parse(input)),
+    fromParse5(parse5.parse(String(file))),
     {
       type: 'root',
       children: [
@@ -65,7 +61,7 @@ test('hast-util-from-parse5', function(t) {
   )
 
   t.deepEqual(
-    fromParse5(parse5.parseFragment(input)),
+    fromParse5(parse5.parseFragment(String(file))),
     {
       type: 'root',
       children: [
@@ -88,7 +84,10 @@ test('hast-util-from-parse5', function(t) {
   )
 
   t.deepEqual(
-    fromParse5(parse5.parse(input, {sourceCodeLocationInfo: true}), file),
+    fromParse5(
+      parse5.parse(String(file), {sourceCodeLocationInfo: true}),
+      file
+    ),
     {
       type: 'root',
       children: [
@@ -162,7 +161,7 @@ test('hast-util-from-parse5', function(t) {
   )
 
   t.deepEqual(
-    fromParse5(parse5.parse(input), file),
+    fromParse5(parse5.parse(String(file)), file),
     {
       type: 'root',
       children: [
@@ -303,20 +302,63 @@ test('hast-util-from-parse5', function(t) {
     'should support synthetic locations on unclosed elements'
   )
 
+  t.deepEqual(
+    fromParse5(
+      parse5.parseFragment(
+        [
+          '<svg width="230" height="120" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">',
+          '<circle cx="60"  cy="60" r="50" fill="red"/>',
+          '</svg>'
+        ].join('\n')
+      ),
+      {space: 'svg'}
+    ),
+    {
+      type: 'root',
+      children: [
+        {
+          type: 'element',
+          tagName: 'svg',
+          properties: {
+            width: 230,
+            height: 120,
+            viewBox: '0 0 200 200',
+            xmlns: 'http://www.w3.org/2000/svg',
+            xmlnsXLink: 'http://www.w3.org/1999/xlink'
+          },
+          children: [
+            {type: 'text', value: '\n'},
+            {
+              type: 'element',
+              tagName: 'circle',
+              properties: {cx: '60', cy: '60', r: '50', fill: 'red'},
+              children: []
+            },
+            {type: 'text', value: '\n'}
+          ]
+        }
+      ],
+      data: {quirksMode: false}
+    },
+    'should transform svg'
+  )
+
   t.end()
 })
 
 test('fixtures', function(t) {
-  var base = join(__dirname, 'fixtures')
-  var entries = dir(base)
+  var base = join('test', 'fixtures')
 
-  t.plan(entries.length)
-  entries.filter(not(hidden)).forEach(each)
+  fs.readdirSync(base)
+    .filter(not(hidden))
+    .forEach(each)
+
+  t.end()
 
   function each(fixture) {
     t.test(fixture, function(st) {
       var opts = {
-        file: vfile(read(join(base, fixture, 'index.html'), 'utf8')),
+        file: vfile.readSync(join(base, fixture, 'index.html')),
         out: join(base, fixture, 'index.json')
       }
 
@@ -337,10 +379,10 @@ test('fixtures', function(t) {
     var expected
 
     try {
-      expected = JSON.parse(read(options.out))
+      expected = JSON.parse(fs.readFileSync(options.out))
     } catch (err) {
       /* New fixture. */
-      write(options.out, JSON.stringify(actual, 0, 2) + '\n')
+      fs.writeFileSync(options.out, JSON.stringify(actual, 0, 2) + '\n')
       return
     }
 
@@ -351,7 +393,7 @@ test('fixtures', function(t) {
   function checkNoYes(t, fixture, options) {
     var input = parse5.parse(String(options.file))
     var actual = fromParse5(input, {file: options.file, verbose: true})
-    var expected = JSON.parse(read(options.out))
+    var expected = JSON.parse(fs.readFileSync(options.out))
 
     clean(expected)
 
@@ -364,7 +406,7 @@ test('fixtures', function(t) {
       sourceCodeLocationInfo: true
     })
     var actual = fromParse5(input)
-    var expected = JSON.parse(read(options.out))
+    var expected = JSON.parse(fs.readFileSync(options.out))
 
     clean(expected)
 
@@ -375,7 +417,7 @@ test('fixtures', function(t) {
   function checkNoNo(t, fixture, options) {
     var input = parse5.parse(String(options.file))
     var actual = fromParse5(input)
-    var expected = JSON.parse(read(options.out))
+    var expected = JSON.parse(fs.readFileSync(options.out))
 
     clean(expected)
 
