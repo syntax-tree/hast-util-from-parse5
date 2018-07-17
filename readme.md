@@ -51,13 +51,21 @@ root[2] (1:1-2:1, 0-70) [data={"quirksMode":false}]
 
 ## API
 
-### `toParse5(ast[, options])`
+### `fromParse5(ast[, options])`
 
 Transform an `ASTNode` to a [HAST Node][node].
 
 ##### `options`
 
 If `options` is a [VFile][], it’s treated as `{file: options}`.
+
+###### `options.space`
+
+Whether the root of the given tree is in the `'html'` or `'svg'` space (enum,
+`'svg'` or `'html'`, default: `'html'`).
+
+If an `svg` element is found in the HTML space, `toHTML` automatically switches
+to the SVG space when entering the element, and switches back when leaving.
 
 ###### `options.file`
 
