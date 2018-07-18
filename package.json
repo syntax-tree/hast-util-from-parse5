@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "browserify": "^16.0.0",
-    "esmangle": "^1.0.1",
     "is-hidden": "^1.1.0",
     "not": "^0.1.0",
     "nyc": "^12.0.0",
