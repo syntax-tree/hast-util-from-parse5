@@ -64,8 +64,9 @@ If `options` is a [VFile][], it’s treated as `{file: options}`.
 Whether the root of the given tree is in the `'html'` or `'svg'` space (enum,
 `'svg'` or `'html'`, default: `'html'`).
 
-If an `svg` element is found in the HTML space, `toHTML` automatically switches
-to the SVG space when entering the element, and switches back when leaving.
+If an element in with the SVG namespace is found in `ast`, `fromParse5`
+automatically switches to the SVG space when entering the element, and
+switches back when leaving.
 
 ###### `options.file`
 
