@@ -320,8 +320,8 @@ test('hast-util-from-parse5', function(t) {
           type: 'element',
           tagName: 'svg',
           properties: {
-            width: 230,
-            height: 120,
+            width: '230',
+            height: '120',
             viewBox: '0 0 200 200',
             xmlns: 'http://www.w3.org/2000/svg',
             xmlnsXLink: 'http://www.w3.org/1999/xlink'

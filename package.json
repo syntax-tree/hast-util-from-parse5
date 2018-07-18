@@ -22,6 +22,7 @@
     "ccount": "^1.0.3",
     "hastscript": "^4.0.0",
     "property-information": "^4.0.0",
+    "web-namespaces": "^1.1.2",
     "xtend": "^4.0.1"
   },
   "devDependencies": {

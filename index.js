@@ -3,6 +3,8 @@
 var html = require('property-information/html')
 var svg = require('property-information/svg')
 var find = require('property-information/find')
+var ns = require('web-namespaces')
+var s = require('hastscript/svg')
 var h = require('hastscript')
 var xtend = require('xtend')
 var count = require('ccount')
@@ -48,8 +50,8 @@ function transform(ast, config) {
   var node
   var pos
 
-  if (fn === element && schema.space === 'html' && ast.nodeName === 'svg') {
-    config.schema = svg
+  if (fn === element) {
+    config.schema = ast.namespaceURI === ns.svg ? svg : html
   }
 
   if (ast.childNodes) {
@@ -131,6 +133,7 @@ function comment(ast) {
 
 /* Transform an element. */
 function element(ast, children, config) {
+  var fn = config.schema.space === 'svg' ? s : h
   var name = ast.tagName
   var attributes = ast.attrs
   var length = attributes.length
@@ -149,7 +152,7 @@ function element(ast, children, config) {
     props[prop] = attribute.value
   }
 
-  node = h(name, props, children)
+  node = fn(name, props, children)
 
   if (name === 'template' && 'content' in ast) {
     pos = ast.sourceCodeLocation
