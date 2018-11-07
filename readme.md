@@ -1,4 +1,4 @@
-# hast-util-from-parse5 [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
+# hast-util-from-parse5 [![Build][build-badge]][build] [![Coverage][coverage-badge]][coverage] [![Downloads][downloads-badge]][downloads] [![Chat][chat-badge]][chat]
 
 Transform [HAST][] to [Parse5’s AST][ast].
 
@@ -141,13 +141,21 @@ repository, organisation, or community you agree to abide by its terms.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/syntax-tree/hast-util-from-parse5.svg
+[build-badge]: https://img.shields.io/travis/syntax-tree/hast-util-from-parse5.svg
 
-[travis]: https://travis-ci.org/syntax-tree/hast-util-from-parse5
+[build]: https://travis-ci.org/syntax-tree/hast-util-from-parse5
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-parse5.svg
+[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-parse5.svg
 
-[codecov]: https://codecov.io/github/syntax-tree/hast-util-from-parse5
+[coverage]: https://codecov.io/github/syntax-tree/hast-util-from-parse5
+
+[downloads-badge]: https://img.shields.io/npm/dm/hast-util-from-parse5.svg
+
+[downloads]: https://www.npmjs.com/package/hast-util-from-parse5
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified/rehype
 
 [npm]: https://docs.npmjs.com/cli/install
 
