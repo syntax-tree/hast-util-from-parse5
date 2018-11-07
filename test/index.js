@@ -380,7 +380,7 @@ test('fixtures', function(t) {
 
     try {
       expected = JSON.parse(fs.readFileSync(options.out))
-    } catch (err) {
+    } catch (error) {
       /* New fixture. */
       fs.writeFileSync(options.out, JSON.stringify(actual, 0, 2) + '\n')
       return
@@ -449,8 +449,8 @@ function cleaner(node) {
 
 function log(label, actual, expected) {
   try {
-    assert.deepEqual(actual, expected, label)
-  } catch (err) {
+    assert.deepStrictEqual(actual, expected, label)
+  } catch (error) {
     console.log('actual:%s: ', label)
     console.dir(actual, {depth: null})
     console.log('expected:%s: ', label)
