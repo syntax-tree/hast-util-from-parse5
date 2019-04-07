@@ -1,6 +1,6 @@
 # hast-util-from-parse5 [![Build][build-badge]][build] [![Coverage][coverage-badge]][coverage] [![Downloads][downloads-badge]][downloads] [![Chat][chat-badge]][chat]
 
-Transform [HAST][] to [Parse5’s AST][ast].
+Transform [Parse5’s AST][ast] to [HAST][].
 
 ## Installation
 
@@ -165,7 +165,7 @@ repository, organisation, or community you agree to abide by its terms.
 
 [hast]: https://github.com/syntax-tree/hast
 
-[ast]: https://github.com/inikulin/parse5/wiki/Documentation
+[ast]: https://github.com/inikulin/parse5/blob/master/packages/parse5/docs/tree-adapter/default/interface-list.md
 
 [node]: https://github.com/syntax-tree/hast#ast
 
