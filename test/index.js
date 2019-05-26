@@ -381,7 +381,7 @@ test('fixtures', function(t) {
     try {
       expected = JSON.parse(fs.readFileSync(options.out))
     } catch (error) {
-      /* New fixture. */
+      // New fixture.
       fs.writeFileSync(options.out, JSON.stringify(actual, 0, 2) + '\n')
       return
     }
@@ -437,7 +437,7 @@ function clean(tree) {
 function cleaner(node) {
   delete node.position
 
-  /* Remove verbose data */
+  // Remove verbose data.
   if (node.type === 'element') {
     delete node.data
   }

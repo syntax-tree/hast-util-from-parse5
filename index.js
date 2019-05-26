@@ -13,7 +13,7 @@ module.exports = wrapper
 
 var own = {}.hasOwnProperty
 
-/* Handlers. */
+// Handlers.
 var map = {
   '#document': root,
   '#document-fragment': root,
@@ -22,7 +22,7 @@ var map = {
   '#documentType': doctype
 }
 
-/* Wrapper to normalise options. */
+// Wrapper to normalise options.
 function wrapper(ast, options) {
   var settings = options || {}
   var file
@@ -42,7 +42,7 @@ function wrapper(ast, options) {
   })
 }
 
-/* Transform a node. */
+// Transform a node.
 function transform(ast, config) {
   var schema = config.schema
   var fn = own.call(map, ast.nodeName) ? map[ast.nodeName] : element
@@ -74,7 +74,7 @@ function transform(ast, config) {
   return node
 }
 
-/* Transform children. */
+// Transform children.
 function nodes(children, config) {
   var length = children.length
   var index = -1
@@ -87,8 +87,8 @@ function nodes(children, config) {
   return result
 }
 
-/* Transform a document.
- * Stores `ast.quirksMode` in `node.data.quirksMode`. */
+// Transform a document.
+// Stores `ast.quirksMode` in `node.data.quirksMode`.
 function root(ast, children, config) {
   var node = {type: 'root', children: children, data: {}}
   var doc
@@ -111,7 +111,7 @@ function root(ast, children, config) {
   return node
 }
 
-/* Transform a doctype. */
+// Transform a doctype.
 function doctype(ast) {
   return {
     type: 'doctype',
@@ -121,17 +121,17 @@ function doctype(ast) {
   }
 }
 
-/* Transform a text. */
+// Transform a text.
 function text(ast) {
   return {type: 'text', value: ast.value}
 }
 
-/* Transform a comment. */
+// Transform a comment.
 function comment(ast) {
   return {type: 'comment', value: ast.data}
 }
 
-/* Transform an element. */
+// Transform an element.
 function element(ast, children, config) {
   var fn = config.schema.space === 'svg' ? s : h
   var name = ast.tagName
@@ -169,7 +169,7 @@ function element(ast, children, config) {
   return node
 }
 
-/* Create clean positional information. */
+// Create clean positional information.
 function location(node, location, config) {
   var schema = config.schema
   var verbose = config.verbose
@@ -183,7 +183,8 @@ function location(node, location, config) {
   if (node.type === 'element') {
     reference = node.children[node.children.length - 1]
 
-    /* Unclosed with children (upstream: https://github.com/inikulin/parse5/issues/109) */
+    // Bug for unclosed with children.
+    // See: <https://github.com/inikulin/parse5/issues/109>.
     if (
       !location.endTag &&
       reference &&
