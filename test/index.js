@@ -451,9 +451,9 @@ function log(label, actual, expected) {
   try {
     assert.deepStrictEqual(actual, expected, label)
   } catch (error) {
-    console.log('actual:%s: ', label)
+    console.log('actual:%s:', label)
     console.dir(actual, {depth: null})
-    console.log('expected:%s: ', label)
+    console.log('expected:%s:', label)
     console.dir(expected, {depth: null})
   }
 }
