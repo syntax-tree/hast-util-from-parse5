@@ -1,12 +1,21 @@
-# hast-util-from-parse5 [![Build][build-badge]][build] [![Coverage][coverage-badge]][coverage] [![Downloads][downloads-badge]][downloads] [![Chat][chat-badge]][chat]
+# hast-util-from-parse5
 
-Transform [Parse5’s AST][ast] to [HAST][].
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Size][size-badge]][size]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
-## Installation
+[**hast**][hast] utility to transform [Parse5’s AST][ast] to a hast
+[*tree*][tree].
+
+## Install
 
 [npm][]:
 
-```bash
+```sh
 npm install hast-util-from-parse5
 ```
 
@@ -20,7 +29,7 @@ Say we have the following file, `example.html`:
 
 And our script, `example.js`, looks as follows:
 
-```javascript
+```js
 var vfile = require('to-vfile')
 var parse5 = require('parse5')
 var inspect = require('unist-util-inspect')
@@ -53,31 +62,33 @@ root[2] (1:1-2:1, 0-70) [data={"quirksMode":false}]
 
 ### `fromParse5(ast[, options])`
 
-Transform an `ASTNode` to a [HAST Node][node].
+Transform [Parse5’s AST][ast] to a [**hast**][hast] [*tree*][tree].
 
 ##### `options`
 
-If `options` is a [VFile][], it’s treated as `{file: options}`.
+If `options` is a [`VFile`][vfile], it’s treated as `{file: options}`.
 
 ###### `options.space`
 
-Whether the root of the given tree is in the `'html'` or `'svg'` space (enum,
-`'svg'` or `'html'`, default: `'html'`).
+Whether the [*root*][root] of the [*tree*][tree] is in the `'html'` or `'svg'`
+space (enum, `'svg'` or `'html'`, default: `'html'`).
 
 If an element in with the SVG namespace is found in `ast`, `fromParse5`
-automatically switches to the SVG space when entering the element, and
-switches back when leaving.
+automatically switches to the SVG space when entering the element, and switches
+back when leaving.
 
 ###### `options.file`
 
-[Virtual file][vfile], used to add positional information to HAST nodes.
-If given, the file should have the original HTML source as its contents.
+[`VFile`][vfile], used to add [positional information][positional-information]
+to [*nodes*][node].
+If given, the [*file*][file] should have the original HTML source as its
+contents.
 
 ###### `options.verbose`
 
-Whether to add positional information about starting tags, closing tags,
-and attributes to elements (`boolean`, default: `false`).  Note: not used
-without `file`.
+Whether to add extra positional information about starting tags, closing tags,
+and attributes to elements (`boolean`, default: `false`).
+Note: not used without `file`.
 
 For the following HTML:
 
@@ -91,11 +102,7 @@ The verbose info would looks as follows:
 {
   type: 'element',
   tagName: 'img',
-  properties: {
-    src: 'http://example.com/fav.ico',
-    alt: 'foo',
-    title: 'bar'
-  },
+  properties: {src: 'http://example.com/fav.ico', alt: 'foo', title: 'bar'},
   children: [],
   data: {
     position: {
@@ -129,11 +136,13 @@ The verbose info would looks as follows:
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/hast`][contributing] for ways to get
+See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
 started.
+See [`support.md`][support] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -153,9 +162,19 @@ repository, organisation, or community you agree to abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/hast-util-from-parse5
 
+[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-from-parse5.svg
+
+[size]: https://bundlephobia.com/result?p=hast-util-from-parse5
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
 [chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
 
-[chat]: https://spectrum.chat/unified/rehype
+[chat]: https://spectrum.chat/unified/syntax-tree
 
 [npm]: https://docs.npmjs.com/cli/install
 
@@ -163,14 +182,24 @@ repository, organisation, or community you agree to abide by its terms.
 
 [author]: https://wooorm.com
 
-[hast]: https://github.com/syntax-tree/hast
+[contributing]: https://github.com/syntax-tree/.github/blob/master/contributing.md
+
+[support]: https://github.com/syntax-tree/.github/blob/master/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/master/code-of-conduct.md
 
 [ast]: https://github.com/inikulin/parse5/blob/master/packages/parse5/docs/tree-adapter/default/interface-list.md
 
-[node]: https://github.com/syntax-tree/hast#ast
-
 [vfile]: https://github.com/vfile/vfile
 
-[contributing]: https://github.com/syntax-tree/hast/blob/master/contributing.md
+[tree]: https://github.com/syntax-tree/unist#tree
 
-[coc]: https://github.com/syntax-tree/hast/blob/master/code-of-conduct.md
+[root]: https://github.com/syntax-tree/unist#root
+
+[positional-information]: https://github.com/syntax-tree/unist#positional-information
+
+[file]: https://github.com/syntax-tree/unist#file
+
+[hast]: https://github.com/syntax-tree/hast
+
+[node]: https://github.com/syntax-tree/hast#nodes
