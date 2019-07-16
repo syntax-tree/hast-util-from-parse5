@@ -36,7 +36,7 @@
     "remark-preset-wooorm": "^5.0.0",
     "tape": "^4.0.0",
     "tinyify": "^2.0.0",
-    "to-vfile": "^5.0.0",
+    "to-vfile": "^6.0.0",
     "unist-util-visit": "^1.0.0",
     "xo": "^0.24.0"
   },
