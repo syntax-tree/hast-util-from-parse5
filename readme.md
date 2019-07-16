@@ -134,6 +134,11 @@ The verbose info would looks as follows:
 }
 ```
 
+## Security
+
+Use of `hast-util-from-parse5` can open you up to a
+[cross-site scripting (XSS)][xss] attack if Parse5’s AST is unsafe.
+
 ## Contribute
 
 See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
@@ -203,3 +208,5 @@ abide by its terms.
 [hast]: https://github.com/syntax-tree/hast
 
 [node]: https://github.com/syntax-tree/hast#nodes
+
+[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
