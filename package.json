@@ -1,13 +1,17 @@
 {
   "name": "hast-util-from-parse5",
   "version": "5.0.2",
-  "description": "Transform Parse5’s AST to hast",
+  "description": "hast utility to transform from Parse5’s AST",
   "license": "MIT",
   "keywords": [
-    "parse5",
-    "ast",
+    "unist",
     "hast",
-    "utility"
+    "hast-util",
+    "util",
+    "utility",
+    "transform",
+    "change",
+    "ast"
   ],
   "repository": "syntax-tree/hast-util-from-parse5",
   "bugs": "https://github.com/syntax-tree/hast-util-from-parse5/issues",
