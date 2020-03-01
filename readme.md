@@ -139,6 +139,21 @@ The verbose info would looks as follows:
 Use of `hast-util-from-parse5` can open you up to a
 [cross-site scripting (XSS)][xss] attack if Parse5’s AST is unsafe.
 
+## Related
+
+*   [`hast-util-to-parse5`](https://github.com/syntax-tree/hast-util-to-parse5)
+    — transform hast to Parse5’s AST
+*   [`hast-util-to-nlcst`](https://github.com/syntax-tree/hast-util-to-nlcst)
+    — transform hast to nlcst
+*   [`hast-util-to-mdast`](https://github.com/syntax-tree/hast-util-to-mdast)
+    — transform hast to mdast
+*   [`hast-util-to-xast`](https://github.com/syntax-tree/hast-util-to-xast)
+    — transform hast to xast
+*   [`mdast-util-to-hast`](https://github.com/syntax-tree/mdast-util-to-hast)
+    — transform mdast to hast
+*   [`mdast-util-to-nlcst`](https://github.com/syntax-tree/mdast-util-to-nlcst)
+    — transform mdast to nlcst
+
 ## Contribute
 
 See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
