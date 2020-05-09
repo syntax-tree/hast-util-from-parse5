@@ -30,7 +30,6 @@
   "types": "types/index.d.ts",
   "dependencies": {
     "ccount": "^1.0.3",
-    "dtslint": "^3.5.2",
     "hastscript": "^5.0.0",
     "property-information": "^5.0.0",
     "web-namespaces": "^1.1.2",
@@ -39,6 +38,7 @@
   "devDependencies": {
     "@types/parse5": "^5.0.2",
     "browserify": "^16.0.0",
+    "dtslint": "^3.5.2",
     "is-hidden": "^1.0.0",
     "not": "^0.1.0",
     "nyc": "^15.0.0",
