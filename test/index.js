@@ -13,7 +13,7 @@ var fromParse5 = require('..')
 
 var join = path.join
 
-test('hast-util-from-parse5', function(t) {
+test('hast-util-from-parse5', function (t) {
   var file = vfile({contents: '<title>Hello!</title><h1>World!'})
 
   t.deepEqual(
@@ -346,17 +346,15 @@ test('hast-util-from-parse5', function(t) {
   t.end()
 })
 
-test('fixtures', function(t) {
+test('fixtures', function (t) {
   var base = join('test', 'fixtures')
 
-  fs.readdirSync(base)
-    .filter(not(hidden))
-    .forEach(each)
+  fs.readdirSync(base).filter(not(hidden)).forEach(each)
 
   t.end()
 
   function each(fixture) {
-    t.test(fixture, function(st) {
+    t.test(fixture, function (st) {
       var opts = {
         file: vfile.readSync(join(base, fixture, 'index.html')),
         out: join(base, fixture, 'index.json')

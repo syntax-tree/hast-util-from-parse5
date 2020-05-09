@@ -22,10 +22,7 @@
               "tagName": "p",
               "properties": {
                 "id": "foo",
-                "className": [
-                  "bar",
-                  "baz"
-                ],
+                "className": ["bar", "baz"],
                 "dataQux": "quux"
               },
               "children": [],
