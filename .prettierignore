@@ -2,4 +2,5 @@ coverage/
 hast-util-from-parse5.js
 hast-util-from-parse5.min.js
 *.html
+*.json
 *.md
