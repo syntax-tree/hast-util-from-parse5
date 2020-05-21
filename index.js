@@ -6,7 +6,6 @@ var find = require('property-information/find')
 var ns = require('web-namespaces')
 var s = require('hastscript/svg')
 var h = require('hastscript')
-var xtend = require('xtend')
 var count = require('ccount')
 
 module.exports = wrapper
@@ -191,7 +190,7 @@ function location(node, location, config) {
       reference.position &&
       reference.position.end
     ) {
-      pos.end = xtend(reference.position.end)
+      pos.end = Object.assign({}, reference.position.end)
     }
 
     if (verbose) {
