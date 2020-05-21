@@ -355,17 +355,17 @@ test('fixtures', function (t) {
 
   function each(fixture) {
     t.test(fixture, function (st) {
-      var opts = {
+      var options = {
         file: vfile.readSync(join(base, fixture, 'index.html')),
         out: join(base, fixture, 'index.json')
       }
 
       st.plan(4)
 
-      checkYesYes(st, fixture, opts)
-      checkNoYes(st, fixture, opts)
-      checkYesNo(st, fixture, opts)
-      checkNoNo(st, fixture, opts)
+      checkYesYes(st, fixture, options)
+      checkNoYes(st, fixture, options)
+      checkYesNo(st, fixture, options)
+      checkNoNo(st, fixture, options)
     })
   }
 
