@@ -30,12 +30,12 @@
   "types": "types/index.d.ts",
   "dependencies": {
     "@types/parse5": "^5.0.0",
-    "ccount": "^1.0.3",
+    "ccount": "^1.0.0",
     "hastscript": "^5.0.0",
     "property-information": "^5.0.0",
-    "vfile": "^4.1.0",
-    "web-namespaces": "^1.1.2",
-    "xtend": "^4.0.1"
+    "vfile": "^4.0.0",
+    "web-namespaces": "^1.0.0",
+    "xtend": "^4.0.0"
   },
   "devDependencies": {
     "browserify": "^16.0.0",
