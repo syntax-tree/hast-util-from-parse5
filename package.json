@@ -50,7 +50,7 @@
     "tinyify": "^2.0.0",
     "to-vfile": "^6.0.0",
     "unist-util-visit": "^2.0.0",
-    "xo": "^0.30.0"
+    "xo": "^0.32.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier --write . && xo --fix",
@@ -75,6 +75,7 @@
     "esnext": false,
     "rules": {
       "unicorn/no-fn-reference-in-iterator": "off",
+      "unicorn/prefer-optional-catch-binding": "off",
       "guard-for-in": "off"
     },
     "ignores": [
