@@ -155,8 +155,10 @@ function element(ast, children, config) {
 
   if (name === 'template' && 'content' in ast) {
     pos = ast.sourceCodeLocation
-    start = pos && pos.startTag && position(pos.startTag).end
-    end = pos && pos.endTag && position(pos.endTag).start
+    start = pos && pos.startTag && position(pos.startTag)
+    start = start && start.end
+    end = pos && pos.endTag && position(pos.endTag)
+    end = end && end.start
 
     node.content = transform(ast.content, config)
 
