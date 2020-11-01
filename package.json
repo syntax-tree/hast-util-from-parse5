@@ -31,7 +31,7 @@
   "dependencies": {
     "@types/parse5": "^5.0.0",
     "ccount": "^1.0.0",
-    "hastscript": "^5.0.0",
+    "hastscript": "^6.0.0",
     "property-information": "^5.0.0",
     "vfile": "^4.0.0",
     "web-namespaces": "^1.0.0"
