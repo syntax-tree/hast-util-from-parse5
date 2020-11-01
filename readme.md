@@ -35,9 +35,9 @@ var parse5 = require('parse5')
 var inspect = require('unist-util-inspect')
 var fromParse5 = require('hast-util-from-parse5')
 
-var doc = vfile.readSync('example.html')
-var ast = parse5.parse(String(doc), {sourceCodeLocationInfo: true})
-var hast = fromParse5(ast, doc)
+var file = vfile.readSync('example.html')
+var p5ast = parse5.parse(String(file), {sourceCodeLocationInfo: true})
+var hast = fromParse5(p5ast, file)
 
 console.log(inspect(hast))
 ```
@@ -45,22 +45,30 @@ console.log(inspect(hast))
 Now, running `node example` yields:
 
 ```text
-root[2] (1:1-2:1, 0-70) [data={"quirksMode":false}]
-├─ doctype (1:1-1:16, 0-15) [name="html"]
-└─ element[2] [tagName="html"]
-   ├─ element[1] [tagName="head"]
-   │  └─ element[1] (1:16-1:37, 15-36) [tagName="title"]
-   │     └─ text: "Hello!" (1:23-1:29, 22-28)
-   └─ element[1] [tagName="body"]
-      └─ element[3] (1:37-2:1, 36-70) [tagName="h1"][properties={"id":"world"}]
-         ├─ text: "World!" (1:52-1:58, 51-57)
-         ├─ comment: "after" (1:58-1:70, 57-69)
-         └─ text: "\n" (1:70-2:1, 69-70)
+root[2] (1:1-2:1, 0-70)
+│ data: {"quirksMode":false}
+├─0 doctype<html> (1:1-1:16, 0-15)
+│     public: null
+│     system: null
+└─1 element<html>[2]
+    │ properties: {}
+    ├─0 element<head>[1]
+    │   │ properties: {}
+    │   └─0 element<title>[1] (1:16-1:37, 15-36)
+    │       │ properties: {}
+    │       └─0 text "Hello!" (1:23-1:29, 22-28)
+    └─1 element<body>[1]
+        │ properties: {}
+        └─0 element<h1>[3] (1:37-2:1, 36-70)
+            │ properties: {"id":"world"}
+            ├─0 text "World!" (1:52-1:58, 51-57)
+            ├─1 comment "after" (1:58-1:70, 57-69)
+            └─2 text "\n" (1:70-2:1, 69-70)
 ```
 
 ## API
 
-### `fromParse5(ast[, options])`
+### `fromParse5(ast[, file|options])`
 
 Transform [Parse5’s AST][ast] to a [**hast**][hast] [*tree*][tree].
 
