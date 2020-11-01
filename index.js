@@ -6,7 +6,7 @@ var find = require('property-information/find')
 var ns = require('web-namespaces')
 var s = require('hastscript/svg')
 var h = require('hastscript')
-var count = require('ccount')
+var vfileLocation = require('vfile-location')
 
 module.exports = wrapper
 
@@ -36,8 +36,7 @@ function wrapper(ast, options) {
   return transform(ast, {
     schema: settings.space === 'svg' ? svg : html,
     file: file,
-    verbose: settings.verbose,
-    location: false
+    verbose: settings.verbose
   })
 }
 
@@ -47,7 +46,7 @@ function transform(ast, config) {
   var fn = own.call(map, ast.nodeName) ? map[ast.nodeName] : element
   var children
   var node
-  var pos
+  var position
 
   if (fn === element) {
     config.schema = ast.namespaceURI === ns.svg ? svg : html
@@ -60,11 +59,11 @@ function transform(ast, config) {
   node = fn(ast, children, config)
 
   if (ast.sourceCodeLocation && config.file) {
-    pos = location(node, ast.sourceCodeLocation, config)
+    position = location(node, ast.sourceCodeLocation, config)
 
-    if (pos) {
+    if (position) {
       config.location = true
-      node.position = pos
+      node.position = position
     }
   }
 
@@ -75,11 +74,10 @@ function transform(ast, config) {
 
 // Transform children.
 function nodes(children, config) {
-  var length = children.length
   var index = -1
   var result = []
 
-  while (++index < length) {
+  while (++index < children.length) {
     result[index] = transform(children[index], config)
   }
 
@@ -89,21 +87,20 @@ function nodes(children, config) {
 // Transform a document.
 // Stores `ast.quirksMode` in `node.data.quirksMode`.
 function root(ast, children, config) {
-  var node = {type: 'root', children: children, data: {}}
+  var node = {
+    type: 'root',
+    children: children,
+    data: {quirksMode: ast.mode === 'quirks' || ast.mode === 'limited-quirks'}
+  }
   var doc
-
-  node.data.quirksMode = ast.mode === 'quirks' || ast.mode === 'limited-quirks'
+  var location
 
   if (config.file && config.location) {
     doc = String(config.file)
-
+    location = vfileLocation(doc)
     node.position = {
-      start: {line: 1, column: 1, offset: 0},
-      end: {
-        line: count(doc, '\n') + 1,
-        column: doc.length - doc.lastIndexOf('\n'),
-        offset: doc.length
-      }
+      start: location.toPoint(0),
+      end: location.toPoint(doc.length)
     }
   }
 
