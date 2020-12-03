@@ -178,9 +178,9 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://img.shields.io/travis/syntax-tree/hast-util-from-parse5.svg
+[build-badge]: https://github.com/syntax-tree/hast-util-from-parse5/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/syntax-tree/hast-util-from-parse5
+[build]: https://github.com/syntax-tree/hast-util-from-parse5/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-parse5.svg
 
