@@ -348,8 +348,12 @@ test('hast-util-from-parse5', function (t) {
 
 test('fixtures', function (t) {
   var base = join('test', 'fixtures')
+  var files = fs.readdirSync(base).filter(not(hidden))
+  var index = -1
 
-  fs.readdirSync(base).filter(not(hidden)).forEach(each)
+  while (++index < files.length) {
+    each(files[index])
+  }
 
   t.end()
 

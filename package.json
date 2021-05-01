@@ -50,7 +50,7 @@
     "tinyify": "^3.0.0",
     "to-vfile": "^6.0.0",
     "unist-util-visit": "^2.0.0",
-    "xo": "^0.35.0"
+    "xo": "^0.38.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
