@@ -1,3 +1,13 @@
+/**
+ * @typedef {import('tape').Test} Test
+ * @typedef {import('vfile').VFile} VFile
+ * @typedef {import('../lib/index.js').Node} Node
+ *
+ * @typedef Options
+ * @property {VFile} file
+ * @property {string} out
+ */
+
 import fs from 'fs'
 import path from 'path'
 import assert from 'assert'
@@ -222,9 +232,11 @@ test('hast-util-from-parse5', function (t) {
           {
             nodeName: '#text',
             value: 'Hello!',
+            // @ts-ignore runtime.
             sourceCodeLocation: {}
           }
         ],
+        // @ts-ignore runtime.
         sourceCodeLocation: {
           startLine: 1,
           startCol: 1,
@@ -256,6 +268,7 @@ test('hast-util-from-parse5', function (t) {
         attrs: [],
         namespaceURI: 'http://www.w3.org/1999/xhtml',
         childNodes: [
+          // @ts-ignore runtime.
           {
             nodeName: '#text',
             value: 'Hello!',
@@ -269,6 +282,7 @@ test('hast-util-from-parse5', function (t) {
             }
           }
         ],
+        // @ts-ignore runtime.
         sourceCodeLocation: {
           startLine: 1,
           startCol: 1,
@@ -356,6 +370,9 @@ test('fixtures', function (t) {
 
   t.end()
 
+  /**
+   * @param {string} fixture
+   */
   function each(fixture) {
     t.test(fixture, function (st) {
       var options = {
@@ -372,18 +389,23 @@ test('fixtures', function (t) {
     })
   }
 
+  /**
+   * @param {Test} t
+   * @param {Options} options
+   */
   function checkYesYes(t, options) {
     var input = parse5.parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
     var actual = fromParse5(input, {file: options.file, verbose: true})
+    /** @type {Node} */
     var expected
 
     try {
-      expected = JSON.parse(fs.readFileSync(options.out))
+      expected = JSON.parse(String(fs.readFileSync(options.out)))
     } catch {
       // New fixture.
-      fs.writeFileSync(options.out, JSON.stringify(actual, 0, 2) + '\n')
+      fs.writeFileSync(options.out, JSON.stringify(actual, null, 2) + '\n')
       return
     }
 
@@ -391,10 +413,15 @@ test('fixtures', function (t) {
     t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position')
   }
 
+  /**
+   * @param {Test} t
+   * @param {Options} options
+   */
   function checkNoYes(t, options) {
     var input = parse5.parse(String(options.file))
     var actual = fromParse5(input, {file: options.file, verbose: true})
-    var expected = JSON.parse(fs.readFileSync(options.out))
+    /** @type {Node} */
+    var expected = JSON.parse(String(fs.readFileSync(options.out)))
 
     clean(expected)
 
@@ -402,12 +429,17 @@ test('fixtures', function (t) {
     t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position')
   }
 
+  /**
+   * @param {Test} t
+   * @param {Options} options
+   */
   function checkYesNo(t, options) {
     var input = parse5.parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
     var actual = fromParse5(input)
-    var expected = JSON.parse(fs.readFileSync(options.out))
+    /** @type {Node} */
+    var expected = JSON.parse(String(fs.readFileSync(options.out)))
 
     clean(expected)
 
@@ -415,10 +447,15 @@ test('fixtures', function (t) {
     t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position')
   }
 
+  /**
+   * @param {Test} t
+   * @param {Options} options
+   */
   function checkNoNo(t, options) {
     var input = parse5.parse(String(options.file))
     var actual = fromParse5(input)
-    var expected = JSON.parse(fs.readFileSync(options.out))
+    /** @type {Node} */
+    var expected = JSON.parse(String(fs.readFileSync(options.out)))
 
     clean(expected)
 
@@ -431,23 +468,34 @@ test('fixtures', function (t) {
   }
 })
 
+/**
+ * @param {Node} tree
+ */
 function clean(tree) {
   visit(tree, cleaner)
 }
 
+/**
+ * @param {Node} node
+ */
 function cleaner(node) {
   delete node.position
 
   // Remove verbose data.
   if (node.type === 'element') {
     delete node.data
-  }
 
-  if (node.content) {
-    clean(node.content)
+    if ('content' in node) {
+      clean(node.content)
+    }
   }
 }
 
+/**
+ * @param {string} label
+ * @param {Node} actual
+ * @param {Node} expected
+ */
 function log(label, actual, expected) {
   try {
     assert.deepStrictEqual(actual, expected, label)
