@@ -1,14 +1,7 @@
-'use strict'
-
-var s = require('hastscript/svg')
-var h = require('hastscript')
-var find = require('property-information/find')
-var html = require('property-information/html')
-var svg = require('property-information/svg')
-var vfileLocation = require('vfile-location')
-var ns = require('web-namespaces')
-
-module.exports = wrapper
+import {h, s} from 'hastscript'
+import {html, svg, find} from 'property-information'
+import vfileLocation from 'vfile-location'
+import {webNamespaces} from 'web-namespaces'
 
 var own = {}.hasOwnProperty
 
@@ -22,7 +15,7 @@ var map = {
 }
 
 // Wrapper to normalise options.
-function wrapper(ast, options) {
+export function fromParse5(ast, options) {
   var settings = options || {}
   var file
 
@@ -35,7 +28,7 @@ function wrapper(ast, options) {
 
   return transform(ast, {
     schema: settings.space === 'svg' ? svg : html,
-    file: file,
+    file,
     verbose: settings.verbose
   })
 }
@@ -49,7 +42,7 @@ function transform(ast, config) {
   var position
 
   if (fn === element) {
-    config.schema = ast.namespaceURI === ns.svg ? svg : html
+    config.schema = ast.namespaceURI === webNamespaces.svg ? svg : html
   }
 
   if (ast.childNodes) {
@@ -89,7 +82,7 @@ function nodes(children, config) {
 function root(ast, children, config) {
   var result = {
     type: 'root',
-    children: children,
+    children,
     data: {quirksMode: ast.mode === 'quirks' || ast.mode === 'limited-quirks'}
   }
   var doc
@@ -154,7 +147,7 @@ function element(ast, children, config) {
     result.content = transform(ast.content, config)
 
     if ((start || end) && config.file) {
-      result.content.position = {start: start, end: end}
+      result.content.position = {start, end}
     }
   }
 
@@ -181,7 +174,11 @@ function location(node, location, config) {
       props = {}
 
       for (key in location.attrs) {
-        props[find(config.schema, key).property] = position(location.attrs[key])
+        if (own.call(location.attrs, key)) {
+          props[find(config.schema, key).property] = position(
+            location.attrs[key]
+          )
+        }
       }
 
       node.data = {
@@ -208,7 +205,7 @@ function position(loc) {
     column: loc.endCol,
     offset: loc.endOffset
   })
-  return start || end ? {start: start, end: end} : null
+  return start || end ? {start, end} : null
 }
 
 function point(point) {

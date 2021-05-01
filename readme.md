@@ -13,6 +13,9 @@
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -30,10 +33,10 @@ Say we have the following file, `example.html`:
 And our script, `example.js`, looks as follows:
 
 ```js
-var vfile = require('to-vfile')
-var parse5 = require('parse5')
-var inspect = require('unist-util-inspect')
-var fromParse5 = require('hast-util-from-parse5')
+import vfile from 'to-vfile'
+import parse5 from 'parse5'
+import {inspect} from 'unist-util-inspect'
+import {fromParse5} from 'hast-util-from-parse5'
 
 var file = vfile.readSync('example.html')
 var p5ast = parse5.parse(String(file), {sourceCodeLocationInfo: true})
@@ -67,6 +70,9 @@ root[2] (1:1-2:1, 0-70)
 ```
 
 ## API
+
+This package exports the following identifiers: `fromParse5`.
+There is no default export.
 
 ### `fromParse5(ast[, file|options])`
 

@@ -1,15 +1,12 @@
-'use strict'
-
-var fs = require('fs')
-var path = require('path')
-var assert = require('assert')
-var test = require('tape')
-var not = require('not')
-var hidden = require('is-hidden')
-var vfile = require('to-vfile')
-var parse5 = require('parse5')
-var visit = require('unist-util-visit')
-var fromParse5 = require('..')
+import fs from 'fs'
+import path from 'path'
+import assert from 'assert'
+import test from 'tape'
+import {isHidden} from 'is-hidden'
+import parse5 from 'parse5'
+import {visit} from 'unist-util-visit'
+import vfile from 'to-vfile'
+import {fromParse5} from '../index.js'
 
 var join = path.join
 
@@ -348,11 +345,13 @@ test('hast-util-from-parse5', function (t) {
 
 test('fixtures', function (t) {
   var base = join('test', 'fixtures')
-  var files = fs.readdirSync(base).filter(not(hidden))
+  var files = fs.readdirSync(base)
   var index = -1
 
   while (++index < files.length) {
-    each(files[index])
+    if (!isHidden(files[index])) {
+      each(files[index])
+    }
   }
 
   t.end()
@@ -366,14 +365,14 @@ test('fixtures', function (t) {
 
       st.plan(4)
 
-      checkYesYes(st, fixture, options)
-      checkNoYes(st, fixture, options)
-      checkYesNo(st, fixture, options)
-      checkNoNo(st, fixture, options)
+      checkYesYes(st, options)
+      checkNoYes(st, options)
+      checkYesNo(st, options)
+      checkNoNo(st, options)
     })
   }
 
-  function checkYesYes(t, fixture, options) {
+  function checkYesYes(t, options) {
     var input = parse5.parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
@@ -382,7 +381,7 @@ test('fixtures', function (t) {
 
     try {
       expected = JSON.parse(fs.readFileSync(options.out))
-    } catch (_) {
+    } catch {
       // New fixture.
       fs.writeFileSync(options.out, JSON.stringify(actual, 0, 2) + '\n')
       return
@@ -392,7 +391,7 @@ test('fixtures', function (t) {
     t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position')
   }
 
-  function checkNoYes(t, fixture, options) {
+  function checkNoYes(t, options) {
     var input = parse5.parse(String(options.file))
     var actual = fromParse5(input, {file: options.file, verbose: true})
     var expected = JSON.parse(fs.readFileSync(options.out))
@@ -403,7 +402,7 @@ test('fixtures', function (t) {
     t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position')
   }
 
-  function checkYesNo(t, fixture, options) {
+  function checkYesNo(t, options) {
     var input = parse5.parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
@@ -416,7 +415,7 @@ test('fixtures', function (t) {
     t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position')
   }
 
-  function checkNoNo(t, fixture, options) {
+  function checkNoNo(t, options) {
     var input = parse5.parse(String(options.file))
     var actual = fromParse5(input)
     var expected = JSON.parse(fs.readFileSync(options.out))
@@ -452,7 +451,7 @@ function cleaner(node) {
 function log(label, actual, expected) {
   try {
     assert.deepStrictEqual(actual, expected, label)
-  } catch (_) {
+  } catch {
     console.log('actual:%s:', label)
     console.dir(actual, {depth: null})
     console.log('expected:%s:', label)
