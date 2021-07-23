@@ -38,8 +38,8 @@
     "@types/unist": "^2.0.0",
     "hastscript": "^7.0.0",
     "property-information": "^6.0.0",
-    "vfile": "^4.0.0",
-    "vfile-location": "^3.2.0",
+    "vfile": "^5.0.0",
+    "vfile-location": "^4.0.0",
     "web-namespaces": "^2.0.0"
   },
   "devDependencies": {
