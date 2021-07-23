@@ -15,14 +15,13 @@ import test from 'tape'
 import {isHidden} from 'is-hidden'
 import parse5 from 'parse5'
 import {visit} from 'unist-util-visit'
-// @ts-expect-error: to do type.
-import vfile from 'to-vfile'
+import {toVFile} from 'to-vfile'
 import {fromParse5} from '../index.js'
 
 const join = path.join
 
 test('hast-util-from-parse5', (t) => {
-  const file = vfile({contents: '<title>Hello!</title><h1>World!'})
+  const file = toVFile({value: '<title>Hello!</title><h1>World!'})
 
   t.deepEqual(
     fromParse5(parse5.parse(String(file))),
@@ -377,7 +376,7 @@ test('fixtures', (t) => {
   function each(fixture) {
     t.test(fixture, (st) => {
       const options = {
-        file: vfile.readSync(join(base, fixture, 'index.html')),
+        file: toVFile.readSync(join(base, fixture, 'index.html')),
         out: join(base, fixture, 'index.json')
       }
 
