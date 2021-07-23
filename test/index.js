@@ -15,6 +15,7 @@ import test from 'tape'
 import {isHidden} from 'is-hidden'
 import parse5 from 'parse5'
 import {visit} from 'unist-util-visit'
+// @ts-expect-error: to do type.
 import vfile from 'to-vfile'
 import {fromParse5} from '../index.js'
 
@@ -232,11 +233,11 @@ test('hast-util-from-parse5', (t) => {
           {
             nodeName: '#text',
             value: 'Hello!',
-            // @ts-ignore runtime.
+            // @ts-expect-error runtime.
             sourceCodeLocation: {}
           }
         ],
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         sourceCodeLocation: {
           startLine: 1,
           startCol: 1,
@@ -268,7 +269,7 @@ test('hast-util-from-parse5', (t) => {
         attrs: [],
         namespaceURI: 'http://www.w3.org/1999/xhtml',
         childNodes: [
-          // @ts-ignore runtime.
+          // @ts-expect-error runtime.
           {
             nodeName: '#text',
             value: 'Hello!',
@@ -282,7 +283,7 @@ test('hast-util-from-parse5', (t) => {
             }
           }
         ],
-        // @ts-ignore runtime.
+        // @ts-expect-error runtime.
         sourceCodeLocation: {
           startLine: 1,
           startCol: 1,
@@ -472,23 +473,22 @@ test('fixtures', (t) => {
  * @param {Node} tree
  */
 function clean(tree) {
-  visit(tree, cleaner)
-}
+  visit(
+    tree,
+    // @ts-expect-error: hush.
+    /** @type {import('unist-util-visit').Visitor<Node>} */ (node) => {
+      delete node.position
 
-/**
- * @param {Node} node
- */
-function cleaner(node) {
-  delete node.position
+      // Remove verbose data.
+      if (node.type === 'element') {
+        delete node.data
 
-  // Remove verbose data.
-  if (node.type === 'element') {
-    delete node.data
-
-    if ('content' in node) {
-      clean(node.content)
+        if (node.content) {
+          clean(node.content)
+        }
+      }
     }
-  }
+  )
 }
 
 /**
