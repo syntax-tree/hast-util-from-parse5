@@ -8,9 +8,9 @@
  * @property {string} out
  */
 
-import fs from 'fs'
-import path from 'path'
-import assert from 'assert'
+import fs from 'node:fs'
+import path from 'node:path'
+import assert from 'node:assert'
 import test from 'tape'
 import {isHidden} from 'is-hidden'
 import parse5 from 'parse5'
