@@ -33,14 +33,14 @@ Say we have the following file, `example.html`:
 And our script, `example.js`, looks as follows:
 
 ```js
-import vfile from 'to-vfile'
 import parse5 from 'parse5'
+import {readSync} from 'to-vfile'
 import {inspect} from 'unist-util-inspect'
 import {fromParse5} from 'hast-util-from-parse5'
 
-var file = vfile.readSync('example.html')
-var p5ast = parse5.parse(String(file), {sourceCodeLocationInfo: true})
-var hast = fromParse5(p5ast, file)
+const file = readSync('example.html')
+const p5ast = parse5.parse(String(file), {sourceCodeLocationInfo: true})
+const hast = fromParse5(p5ast, file)
 
 console.log(inspect(hast))
 ```

@@ -18,10 +18,10 @@ import {visit} from 'unist-util-visit'
 import vfile from 'to-vfile'
 import {fromParse5} from '../index.js'
 
-var join = path.join
+const join = path.join
 
-test('hast-util-from-parse5', function (t) {
-  var file = vfile({contents: '<title>Hello!</title><h1>World!'})
+test('hast-util-from-parse5', (t) => {
+  const file = vfile({contents: '<title>Hello!</title><h1>World!'})
 
   t.deepEqual(
     fromParse5(parse5.parse(String(file))),
@@ -357,10 +357,10 @@ test('hast-util-from-parse5', function (t) {
   t.end()
 })
 
-test('fixtures', function (t) {
-  var base = join('test', 'fixtures')
-  var files = fs.readdirSync(base)
-  var index = -1
+test('fixtures', (t) => {
+  const base = join('test', 'fixtures')
+  const files = fs.readdirSync(base)
+  let index = -1
 
   while (++index < files.length) {
     if (!isHidden(files[index])) {
@@ -374,8 +374,8 @@ test('fixtures', function (t) {
    * @param {string} fixture
    */
   function each(fixture) {
-    t.test(fixture, function (st) {
-      var options = {
+    t.test(fixture, (st) => {
+      const options = {
         file: vfile.readSync(join(base, fixture, 'index.html')),
         out: join(base, fixture, 'index.json')
       }
@@ -394,12 +394,12 @@ test('fixtures', function (t) {
    * @param {Options} options
    */
   function checkYesYes(t, options) {
-    var input = parse5.parse(String(options.file), {
+    const input = parse5.parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
-    var actual = fromParse5(input, {file: options.file, verbose: true})
+    const actual = fromParse5(input, {file: options.file, verbose: true})
     /** @type {Node} */
-    var expected
+    let expected
 
     try {
       expected = JSON.parse(String(fs.readFileSync(options.out)))
@@ -418,10 +418,10 @@ test('fixtures', function (t) {
    * @param {Options} options
    */
   function checkNoYes(t, options) {
-    var input = parse5.parse(String(options.file))
-    var actual = fromParse5(input, {file: options.file, verbose: true})
+    const input = parse5.parse(String(options.file))
+    const actual = fromParse5(input, {file: options.file, verbose: true})
     /** @type {Node} */
-    var expected = JSON.parse(String(fs.readFileSync(options.out)))
+    const expected = JSON.parse(String(fs.readFileSync(options.out)))
 
     clean(expected)
 
@@ -434,12 +434,12 @@ test('fixtures', function (t) {
    * @param {Options} options
    */
   function checkYesNo(t, options) {
-    var input = parse5.parse(String(options.file), {
+    const input = parse5.parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
-    var actual = fromParse5(input)
+    const actual = fromParse5(input)
     /** @type {Node} */
-    var expected = JSON.parse(String(fs.readFileSync(options.out)))
+    const expected = JSON.parse(String(fs.readFileSync(options.out)))
 
     clean(expected)
 
@@ -452,10 +452,10 @@ test('fixtures', function (t) {
    * @param {Options} options
    */
   function checkNoNo(t, options) {
-    var input = parse5.parse(String(options.file))
-    var actual = fromParse5(input)
+    const input = parse5.parse(String(options.file))
+    const actual = fromParse5(input)
     /** @type {Node} */
-    var expected = JSON.parse(String(fs.readFileSync(options.out)))
+    const expected = JSON.parse(String(fs.readFileSync(options.out)))
 
     clean(expected)
 
