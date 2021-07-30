@@ -472,22 +472,18 @@ test('fixtures', (t) => {
  * @param {Node} tree
  */
 function clean(tree) {
-  visit(
-    tree,
-    // @ts-expect-error: hush.
-    /** @type {import('unist-util-visit').Visitor<Node>} */ (node) => {
-      delete node.position
+  visit(tree, (node) => {
+    delete node.position
 
-      // Remove verbose data.
-      if (node.type === 'element') {
-        delete node.data
+    // Remove verbose data.
+    if (node.type === 'element') {
+      delete node.data
 
-        if (node.content) {
-          clean(node.content)
-        }
+      if (node.content) {
+        clean(node.content)
       }
     }
-  )
+  })
 }
 
 /**
