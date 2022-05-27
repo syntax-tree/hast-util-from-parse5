@@ -8,44 +8,87 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**hast**][hast] utility to transform [Parse5’s AST][ast] to a hast
-[*tree*][tree].
+[hast][] utility to transform from [`parse5`][parse5]s [AST][].
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`fromParse5(ast[, file|options])`](#fromparse5ast-fileoptions)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a utility that can turn a parse5 tree into a hast tree.
+
+## When should I use this?
+
+You can use this package when using `parse5` as an HTML parser and wanting to
+work with hast.
+
+The utility [`hast-util-to-parse5`][hast-util-to-parse5] does the inverse of
+this utility.
+It generates `parse5`s AST again.
+
+The rehype plugin [`rehype-parse`][rehype-parse] wraps this utility with
+`parse5` to both parse HTML and generate hast from it at a higher-level (easier)
+abstraction.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, 18.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-from-parse5
 ```
 
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {fromParse5} from "https://esm.sh/hast-util-from-parse5@7"
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {fromParse5} from "https://esm.sh/hast-util-from-parse5@7?bundle"
+</script>
+```
+
 ## Use
 
-Say we have the following file, `example.html`:
+Say our document `example.html` contains:
 
 ```html
 <!doctype html><title>Hello!</title><h1 id="world">World!<!--after-->
 ```
 
-And our script, `example.js`, looks as follows:
+…and our module `example.js` looks as follows:
 
 ```js
 import {parse} from 'parse5'
-import {readSync} from 'to-vfile'
+import {read} from 'to-vfile'
 import {inspect} from 'unist-util-inspect'
 import {fromParse5} from 'hast-util-from-parse5'
 
-const file = readSync('example.html')
+const file = await read('example.html')
 const p5ast = parse(String(file), {sourceCodeLocationInfo: true})
 const hast = fromParse5(p5ast, file)
 
 console.log(inspect(hast))
 ```
 
-Now, running `node example` yields:
+…now running `node example.js` yields:
 
 ```text
 root[2] (1:1-2:1, 0-70)
@@ -71,12 +114,12 @@ root[2] (1:1-2:1, 0-70)
 
 ## API
 
-This package exports the following identifiers: `fromParse5`.
+This package exports the identifier `fromParse5`.
 There is no default export.
 
 ### `fromParse5(ast[, file|options])`
 
-Transform [Parse5’s AST][ast] to a [**hast**][hast] [*tree*][tree].
+Transform from [`parse5`][parse5]s [AST][].
 
 ##### `options`
 
@@ -84,8 +127,8 @@ If `options` is a [`VFile`][vfile], it’s treated as `{file: options}`.
 
 ###### `options.space`
 
-Whether the [*root*][root] of the [*tree*][tree] is in the `'html'` or `'svg'`
-space (enum, `'svg'` or `'html'`, default: `'html'`).
+Whether the [*root*][root] of the [*tree*][tree] is in the HTML or SVG space
+(enum, `'svg'` or `'html'`, default: `'html'`).
 
 If an element in with the SVG namespace is found in `ast`, `fromParse5`
 automatically switches to the SVG space when entering the element, and switches
@@ -148,6 +191,18 @@ The verbose info would looks as follows:
 }
 ```
 
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional type `Options`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
+
 ## Security
 
 Use of `hast-util-from-parse5` can open you up to a
@@ -170,8 +225,8 @@ Use of `hast-util-from-parse5` can open you up to a
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
@@ -212,15 +267,27 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://wooorm.com
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[support]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
+
+[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
+
+[parse5]: https://github.com/inikulin/parse5
 
 [ast]: https://github.com/inikulin/parse5/blob/HEAD/packages/parse5/docs/tree-adapter/default/interface-list.md
 
@@ -232,10 +299,12 @@ abide by its terms.
 
 [positional-information]: https://github.com/syntax-tree/unist#positional-information
 
+[hast-util-to-parse5]: https://github.com/syntax-tree/hast-util-to-parse5
+
 [file]: https://github.com/syntax-tree/unist#file
 
 [hast]: https://github.com/syntax-tree/hast
 
 [node]: https://github.com/syntax-tree/hast#nodes
 
-[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
+[rehype-parse]: https://github.com/rehypejs/rehype/tree/main/packages/rehype-parse
