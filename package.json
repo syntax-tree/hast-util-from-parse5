@@ -34,7 +34,6 @@
   ],
   "dependencies": {
     "@types/hast": "^2.0.0",
-    "@types/parse5": "^6.0.0",
     "@types/unist": "^2.0.0",
     "hastscript": "^7.0.0",
     "property-information": "^6.0.0",
@@ -46,7 +45,7 @@
     "@types/tape": "^4.0.0",
     "c8": "^7.0.0",
     "is-hidden": "^2.0.0",
-    "parse5": "^6.0.0",
+    "parse5": "^7.0.0",
     "prettier": "^2.0.0",
     "remark-cli": "^10.0.0",
     "remark-preset-wooorm": "^9.0.0",

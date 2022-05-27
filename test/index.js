@@ -13,7 +13,7 @@ import path from 'node:path'
 import assert from 'node:assert'
 import test from 'tape'
 import {isHidden} from 'is-hidden'
-import parse5 from 'parse5'
+import {parse, parseFragment} from 'parse5'
 import {visit} from 'unist-util-visit'
 import {toVFile} from 'to-vfile'
 import {fromParse5} from '../index.js'
@@ -24,7 +24,7 @@ test('hast-util-from-parse5', (t) => {
   const file = toVFile({value: '<title>Hello!</title><h1>World!'})
 
   t.deepEqual(
-    fromParse5(parse5.parse(String(file))),
+    fromParse5(parse(String(file))),
     {
       type: 'root',
       children: [
@@ -68,7 +68,7 @@ test('hast-util-from-parse5', (t) => {
   )
 
   t.deepEqual(
-    fromParse5(parse5.parseFragment(String(file))),
+    fromParse5(parseFragment(String(file))),
     {
       type: 'root',
       children: [
@@ -91,10 +91,7 @@ test('hast-util-from-parse5', (t) => {
   )
 
   t.deepEqual(
-    fromParse5(
-      parse5.parse(String(file), {sourceCodeLocationInfo: true}),
-      file
-    ),
+    fromParse5(parse(String(file), {sourceCodeLocationInfo: true}), file),
     {
       type: 'root',
       children: [
@@ -168,7 +165,7 @@ test('hast-util-from-parse5', (t) => {
   )
 
   t.deepEqual(
-    fromParse5(parse5.parse(String(file)), file),
+    fromParse5(parse(String(file)), file),
     {
       type: 'root',
       children: [
@@ -227,16 +224,17 @@ test('hast-util-from-parse5', (t) => {
         nodeName: 'title',
         tagName: 'title',
         attrs: [],
+        // @ts-expect-error: fine.
         namespaceURI: 'http://www.w3.org/1999/xhtml',
         childNodes: [
           {
             nodeName: '#text',
             value: 'Hello!',
-            // @ts-expect-error runtime.
+            // @ts-expect-error: fine.
             sourceCodeLocation: {}
           }
         ],
-        // @ts-expect-error runtime.
+        // @ts-expect-error: fine.
         sourceCodeLocation: {
           startLine: 1,
           startCol: 1,
@@ -266,11 +264,12 @@ test('hast-util-from-parse5', (t) => {
         nodeName: 'p',
         tagName: 'p',
         attrs: [],
+        // @ts-expect-error: fine.
         namespaceURI: 'http://www.w3.org/1999/xhtml',
         childNodes: [
-          // @ts-expect-error runtime.
           {
             nodeName: '#text',
+            // @ts-expect-error: fine.
             value: 'Hello!',
             sourceCodeLocation: {
               startLine: 1,
@@ -282,7 +281,7 @@ test('hast-util-from-parse5', (t) => {
             }
           }
         ],
-        // @ts-expect-error runtime.
+        // @ts-expect-error: fine.
         sourceCodeLocation: {
           startLine: 1,
           startCol: 1,
@@ -315,7 +314,7 @@ test('hast-util-from-parse5', (t) => {
 
   t.deepEqual(
     fromParse5(
-      parse5.parseFragment(
+      parseFragment(
         [
           '<svg width="230" height="120" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">',
           '<circle cx="60"  cy="60" r="50" fill="red"/>',
@@ -394,7 +393,7 @@ test('fixtures', (t) => {
    * @param {Options} options
    */
   function checkYesYes(t, options) {
-    const input = parse5.parse(String(options.file), {
+    const input = parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
     const actual = fromParse5(input, {file: options.file, verbose: true})
@@ -418,7 +417,7 @@ test('fixtures', (t) => {
    * @param {Options} options
    */
   function checkNoYes(t, options) {
-    const input = parse5.parse(String(options.file))
+    const input = parse(String(options.file))
     const actual = fromParse5(input, {file: options.file, verbose: true})
     /** @type {Node} */
     const expected = JSON.parse(String(fs.readFileSync(options.out)))
@@ -434,7 +433,7 @@ test('fixtures', (t) => {
    * @param {Options} options
    */
   function checkYesNo(t, options) {
-    const input = parse5.parse(String(options.file), {
+    const input = parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
     const actual = fromParse5(input)
@@ -452,7 +451,7 @@ test('fixtures', (t) => {
    * @param {Options} options
    */
   function checkNoNo(t, options) {
-    const input = parse5.parse(String(options.file))
+    const input = parse(String(options.file))
     const actual = fromParse5(input)
     /** @type {Node} */
     const expected = JSON.parse(String(fs.readFileSync(options.out)))
