@@ -38,9 +38,8 @@ The utility [`hast-util-to-parse5`][hast-util-to-parse5] does the inverse of
 this utility.
 It generates `parse5`s AST again.
 
-The rehype plugin [`rehype-parse`][rehype-parse] wraps this utility with
-`parse5` to both parse HTML and generate hast from it at a higher-level (easier)
-abstraction.
+The utility [`hast-util-from-html`][hast-util-from-html] wraps this utility and
+`parse5` to both parse HTML and generate hast from it.
 
 ## Install
 
@@ -305,6 +304,6 @@ abide by its terms.
 
 [hast]: https://github.com/syntax-tree/hast
 
-[node]: https://github.com/syntax-tree/hast#nodes
+[hast-util-from-html]: https://github.com/syntax-tree/hast-util-from-html
 
-[rehype-parse]: https://github.com/rehypejs/rehype/tree/main/packages/rehype-parse
+[node]: https://github.com/syntax-tree/hast#nodes
