@@ -269,8 +269,8 @@ test('hast-util-from-parse5', (t) => {
         childNodes: [
           {
             nodeName: '#text',
-            // @ts-expect-error: fine.
             value: 'Hello!',
+            parentNode: null,
             sourceCodeLocation: {
               startLine: 1,
               startCol: 4,
