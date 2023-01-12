@@ -253,7 +253,7 @@ test('hast-util-from-parse5', (t) => {
           value: 'Hello!'
         }
       ],
-      position: {start: {line: 1, column: 1, offset: 0}, end: null}
+      position: {start: {line: 1, column: 1, offset: 0}, end: undefined}
     },
     'should support synthetic locations'
   )
