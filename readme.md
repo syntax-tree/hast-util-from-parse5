@@ -8,7 +8,7 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[hast][] utility to transform from [`parse5`][parse5]s [AST][].
+[hast][] utility to transform from [`parse5`][parse5]s AST.
 
 ## Contents
 
@@ -17,7 +17,9 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`fromParse5(ast[, file|options])`](#fromparse5ast-fileoptions)
+    *   [`fromParse5(tree[, file|options])`](#fromparse5tree-fileoptions)
+    *   [`Options`](#options)
+    *   [`Space`](#space-1)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -44,7 +46,7 @@ The utility [`hast-util-from-html`][hast-util-from-html] wraps this utility and
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, 18.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-from-parse5
@@ -113,38 +115,52 @@ root[2] (1:1-2:1, 0-70)
 
 ## API
 
-This package exports the identifier `fromParse5`.
+This package exports the identifier [`fromParse5`][fromparse5].
 There is no default export.
 
-### `fromParse5(ast[, file|options])`
+### `fromParse5(tree[, file|options])`
 
-Transform from [`parse5`][parse5]s [AST][].
+Transform a `parse5` AST to hast.
 
-##### `options`
+###### Parameters
 
-If `options` is a [`VFile`][vfile], it’s treated as `{file: options}`.
+*   `tree` ([`Parse5Node`][parse5-node])
+    — `parse5` tree to transform
+*   `file` ([`VFile`][vfile], optional)
+    — corresponding file (treated as `{file: file}`)
+*   `options` ([`Options`][options], optional)
+    — configuration
 
-###### `options.space`
+###### Returns
 
-Whether the [*root*][root] of the [*tree*][tree] is in the HTML or SVG space
-(enum, `'svg'` or `'html'`, default: `'html'`).
+hast tree ([`HastNode`][hast-node]).
 
-If an element in with the SVG namespace is found in `ast`, `fromParse5`
-automatically switches to the SVG space when entering the element, and switches
-back when leaving.
+### `Options`
 
-###### `options.file`
+Configuration (TypeScript type).
 
-[`VFile`][vfile], used to add [positional information][positional-information]
-to [*nodes*][node].
-If given, the [*file*][file] should have the original HTML source as its
-contents.
+##### Fields
 
-###### `options.verbose`
+###### `space`
 
-Whether to add extra positional information about starting tags, closing tags,
+Which space the document is in ([`Space`][space], default: `'html'`).
+
+When an `<svg>` element is found in the HTML space, this package already
+automatically switches to and from the SVG space when entering and exiting
+it.
+
+###### `file`
+
+File used to add positional info to nodes ([`VFile`][vfile], optional).
+
+If given, the file should represent the original HTML source.
+
+###### `verbose`
+
+Whether to add extra positional info about starting tags, closing tags,
 and attributes to elements (`boolean`, default: `false`).
-Note: not used without `file`.
+
+> 👉 **Note**: only used when `file` is given.
 
 For the following HTML:
 
@@ -190,10 +206,20 @@ The verbose info would looks as follows:
 }
 ```
 
+### `Space`
+
+Namespace (TypeScript type).
+
+###### Type
+
+```ts
+type Space = 'html' | 'svg'
+```
+
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional type `Options`.
+It exports the additional types [`Options`][options] and [`Space`][space].
 
 ## Compatibility
 
@@ -288,22 +314,20 @@ abide by its terms.
 
 [parse5]: https://github.com/inikulin/parse5
 
-[ast]: https://github.com/inikulin/parse5/blob/HEAD/packages/parse5/docs/tree-adapter/default/interface-list.md
+[parse5-node]: https://github.com/inikulin/parse5/blob/master/packages/parse5/lib/tree-adapters/default.ts
 
 [vfile]: https://github.com/vfile/vfile
 
-[tree]: https://github.com/syntax-tree/unist#tree
-
-[root]: https://github.com/syntax-tree/unist#root
-
-[positional-information]: https://github.com/syntax-tree/unist#positional-information
-
 [hast-util-to-parse5]: https://github.com/syntax-tree/hast-util-to-parse5
-
-[file]: https://github.com/syntax-tree/unist#file
 
 [hast]: https://github.com/syntax-tree/hast
 
 [hast-util-from-html]: https://github.com/syntax-tree/hast-util-from-html
 
-[node]: https://github.com/syntax-tree/hast#nodes
+[hast-node]: https://github.com/syntax-tree/hast#nodes
+
+[fromparse5]: #fromparse5tree-fileoptions
+
+[options]: #options
+
+[space]: #space-1
