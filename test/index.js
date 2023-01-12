@@ -1,5 +1,4 @@
 /**
- * @typedef {import('tape').Test} Test
  * @typedef {import('vfile').VFile} VFile
  * @typedef {import('../lib/index.js').Node} Node
  *
