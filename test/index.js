@@ -16,8 +16,15 @@ import {parse, parseFragment} from 'parse5'
 import {visit} from 'unist-util-visit'
 import {read, toVFile} from 'to-vfile'
 import {fromParse5} from '../index.js'
+import * as mod from '../index.js'
 
 test('fromParse5', () => {
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['fromParse5'],
+    'should expose the public api'
+  )
+
   const file = toVFile({value: '<title>Hello!</title><h1>World!'})
 
   assert.deepEqual(
