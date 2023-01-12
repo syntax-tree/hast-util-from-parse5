@@ -3,27 +3,24 @@
  * @typedef {import('vfile').VFile} VFile
  * @typedef {import('../lib/index.js').Node} Node
  *
- * @typedef Options
+ * @typedef Config
  * @property {VFile} file
- * @property {string} out
+ * @property {URL} out
  */
 
-import fs from 'node:fs'
-import path from 'node:path'
-import assert from 'node:assert'
-import test from 'tape'
+import assert from 'node:assert/strict'
+import fs from 'node:fs/promises'
+import test from 'node:test'
 import {isHidden} from 'is-hidden'
 import {parse, parseFragment} from 'parse5'
 import {visit} from 'unist-util-visit'
-import {toVFile} from 'to-vfile'
+import {read, toVFile} from 'to-vfile'
 import {fromParse5} from '../index.js'
 
-const join = path.join
-
-test('hast-util-from-parse5', (t) => {
+test('fromParse5', () => {
   const file = toVFile({value: '<title>Hello!</title><h1>World!'})
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(parse(String(file))),
     {
       type: 'root',
@@ -67,7 +64,7 @@ test('hast-util-from-parse5', (t) => {
     'should transform a complete document'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(parseFragment(String(file))),
     {
       type: 'root',
@@ -90,7 +87,7 @@ test('hast-util-from-parse5', (t) => {
     'should transform a fragment'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(parse(String(file), {sourceCodeLocationInfo: true}), file),
     {
       type: 'root',
@@ -164,7 +161,7 @@ test('hast-util-from-parse5', (t) => {
     'should accept a file as options'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(parse(String(file)), file),
     {
       type: 'root',
@@ -218,7 +215,7 @@ test('hast-util-from-parse5', (t) => {
     'should accept a file as options (without location info)'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(
       {
         nodeName: 'title',
@@ -258,7 +255,7 @@ test('hast-util-from-parse5', (t) => {
     'should support synthetic locations'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(
       {
         nodeName: 'p',
@@ -312,7 +309,7 @@ test('hast-util-from-parse5', (t) => {
     'should support synthetic locations on unclosed elements'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromParse5(
       parseFragment(
         [
@@ -352,47 +349,33 @@ test('hast-util-from-parse5', (t) => {
     },
     'should transform svg'
   )
-
-  t.end()
 })
 
-test('fixtures', (t) => {
-  const base = join('test', 'fixtures')
-  const files = fs.readdirSync(base)
+test('fixtures', async () => {
+  const base = new URL('fixtures/', import.meta.url)
+  const folders = await fs.readdir(base)
   let index = -1
 
-  while (++index < files.length) {
-    if (!isHidden(files[index])) {
-      each(files[index])
+  while (++index < folders.length) {
+    const folder = folders[index]
+
+    if (isHidden(folder)) {
+      continue
     }
-  }
 
-  t.end()
-
-  /**
-   * @param {string} fixture
-   */
-  function each(fixture) {
-    t.test(fixture, (st) => {
-      const options = {
-        file: toVFile.readSync(join(base, fixture, 'index.html')),
-        out: join(base, fixture, 'index.json')
-      }
-
-      st.plan(4)
-
-      checkYesYes(st, options)
-      checkNoYes(st, options)
-      checkYesNo(st, options)
-      checkNoNo(st, options)
-    })
+    const file = await read(new URL(folder + '/index.html', base))
+    const out = new URL(folder + '/index.json', base)
+    const config = {file, out}
+    await checkYesYes(config)
+    await checkNoYes(config)
+    await checkYesNo(config)
+    await checkNoNo(config)
   }
 
   /**
-   * @param {Test} t
-   * @param {Options} options
+   * @param {Config} options
    */
-  function checkYesYes(t, options) {
+  async function checkYesYes(options) {
     const input = parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
@@ -401,65 +384,70 @@ test('fixtures', (t) => {
     let expected
 
     try {
-      expected = JSON.parse(String(fs.readFileSync(options.out)))
+      expected = JSON.parse(String(await fs.readFile(options.out)))
     } catch {
       // New fixture.
-      fs.writeFileSync(options.out, JSON.stringify(actual, null, 2) + '\n')
+      await fs.writeFile(options.out, JSON.stringify(actual, null, 2) + '\n')
       return
     }
 
-    log('yesyes', actual, expected)
-    t.deepEqual(actual, expected, 'p5 w/ position, hast w/ intent of position')
+    assert.deepEqual(
+      actual,
+      expected,
+      'p5 w/ position, hast w/ intent of position'
+    )
   }
 
   /**
-   * @param {Test} t
-   * @param {Options} options
+   * @param {Config} options
    */
-  function checkNoYes(t, options) {
+  async function checkNoYes(options) {
     const input = parse(String(options.file))
     const actual = fromParse5(input, {file: options.file, verbose: true})
     /** @type {Node} */
-    const expected = JSON.parse(String(fs.readFileSync(options.out)))
+    const expected = JSON.parse(String(await fs.readFile(options.out)))
 
     clean(expected)
 
-    log('noyes', actual, expected)
-    t.deepEqual(actual, expected, 'p5 w/o position, hast w/ intent of position')
+    assert.deepEqual(
+      actual,
+      expected,
+      'p5 w/o position, hast w/ intent of position'
+    )
   }
 
   /**
-   * @param {Test} t
-   * @param {Options} options
+   * @param {Config} options
    */
-  function checkYesNo(t, options) {
+  async function checkYesNo(options) {
     const input = parse(String(options.file), {
       sourceCodeLocationInfo: true
     })
     const actual = fromParse5(input)
     /** @type {Node} */
-    const expected = JSON.parse(String(fs.readFileSync(options.out)))
+    const expected = JSON.parse(String(await fs.readFile(options.out)))
 
     clean(expected)
 
-    log('yesno', actual, expected)
-    t.deepEqual(actual, expected, 'p5 w/ position, hast w/o intent of position')
+    assert.deepEqual(
+      actual,
+      expected,
+      'p5 w/ position, hast w/o intent of position'
+    )
   }
 
   /**
-   * @param {Test} t
-   * @param {Options} options
+   * @param {Config} options
    */
-  function checkNoNo(t, options) {
+  async function checkNoNo(options) {
     const input = parse(String(options.file))
     const actual = fromParse5(input)
     /** @type {Node} */
-    const expected = JSON.parse(String(fs.readFileSync(options.out)))
+    const expected = JSON.parse(String(await fs.readFile(options.out)))
 
     clean(expected)
 
-    log('nono', actual, expected)
-    t.deepEqual(
+    assert.deepEqual(
       actual,
       expected,
       'p5 w/o position, hast w/o intent of position'
@@ -483,20 +471,4 @@ function clean(tree) {
       }
     }
   })
-}
-
-/**
- * @param {string} label
- * @param {Node} actual
- * @param {Node} expected
- */
-function log(label, actual, expected) {
-  try {
-    assert.deepStrictEqual(actual, expected, label)
-  } catch {
-    console.log('actual:%s:', label)
-    console.dir(actual, {depth: null})
-    console.log('expected:%s:', label)
-    console.dir(expected, {depth: null})
-  }
 }
