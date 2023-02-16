@@ -355,6 +355,18 @@ test('fromParse5', () => {
     },
     'should transform svg'
   )
+
+  assert.deepEqual(
+    fromParse5(parseFragment('<x constructor y />'), {space: 'svg'}),
+    {
+      type: 'root',
+      children: [
+        {type: 'element', tagName: 'x', properties: {y: ''}, children: []}
+      ],
+      data: {quirksMode: false}
+    },
+    'should ignore prototypal props'
+  )
 })
 
 test('fixtures', async () => {
