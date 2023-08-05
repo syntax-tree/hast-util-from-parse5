@@ -46,7 +46,7 @@ The utility [`hast-util-from-html`][hast-util-from-html] wraps this utility and
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install hast-util-from-parse5
@@ -77,10 +77,10 @@ Say our document `example.html` contains:
 …and our module `example.js` looks as follows:
 
 ```js
+import {fromParse5} from 'hast-util-from-parse5'
 import {parse} from 'parse5'
 import {read} from 'to-vfile'
 import {inspect} from 'unist-util-inspect'
-import {fromParse5} from 'hast-util-from-parse5'
 
 const file = await read('example.html')
 const p5ast = parse(String(file), {sourceCodeLocationInfo: true})
@@ -94,9 +94,7 @@ console.log(inspect(hast))
 ```text
 root[2] (1:1-2:1, 0-70)
 │ data: {"quirksMode":false}
-├─0 doctype<html> (1:1-1:16, 0-15)
-│     public: null
-│     system: null
+├─0 doctype (1:1-1:16, 0-15)
 └─1 element<html>[2]
     │ properties: {}
     ├─0 element<head>[1]
@@ -115,7 +113,7 @@ root[2] (1:1-2:1, 0-70)
 
 ## API
 
-This package exports the identifier [`fromParse5`][fromparse5].
+This package exports the identifier [`fromParse5`][api-from-parse5].
 There is no default export.
 
 ### `fromParse5(tree[, options])`
@@ -126,7 +124,7 @@ Transform a `parse5` AST to hast.
 
 *   `tree` ([`Parse5Node`][parse5-node])
     — `parse5` tree to transform
-*   `options` ([`Options`][options], optional)
+*   `options` ([`Options`][api-options], optional)
     — configuration
 
 ###### Returns
@@ -139,19 +137,19 @@ Configuration (TypeScript type).
 
 ##### Fields
 
-###### `space`
-
-Which space the document is in ([`Space`][space], default: `'html'`).
-
-When an `<svg>` element is found in the HTML space, this package already
-automatically switches to and from the SVG space when entering and exiting
-it.
-
 ###### `file`
 
 File used to add positional info to nodes ([`VFile`][vfile], optional).
 
 If given, the file should represent the original HTML source.
+
+###### `space`
+
+Which space the document is in ([`Space`][api-space], default: `'html'`).
+
+When an `<svg>` element is found in the HTML space, this package already
+automatically switches to and from the SVG space when entering and exiting
+it.
 
 ###### `verbose`
 
@@ -217,14 +215,18 @@ type Space = 'html' | 'svg'
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types [`Options`][options] and [`Space`][space].
+It exports the additional types [`Options`][api-options] and
+[`Space`][api-space].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `hast-util-from-parse5@^7`,
+compatible with Node.js 12.
 
 ## Security
 
@@ -274,9 +276,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/hast-util-from-parse5
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-from-parse5.svg
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=hast-util-from-parse5
 
-[size]: https://bundlephobia.com/result?p=hast-util-from-parse5
+[size]: https://bundlejs.com/?q=hast-util-from-parse5
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -324,8 +326,8 @@ abide by its terms.
 
 [hast-node]: https://github.com/syntax-tree/hast#nodes
 
-[fromparse5]: #fromparse5tree-options
+[api-from-parse5]: #fromparse5tree-options
 
-[options]: #options
+[api-options]: #options
 
-[space]: #space-1
+[api-space]: #space-1
