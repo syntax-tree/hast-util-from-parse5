@@ -17,7 +17,7 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`fromParse5(tree[, file|options])`](#fromparse5tree-fileoptions)
+    *   [`fromParse5(tree[, options])`](#fromparse5tree-options)
     *   [`Options`](#options)
     *   [`Space`](#space-1)
 *   [Types](#types)
@@ -84,7 +84,7 @@ import {fromParse5} from 'hast-util-from-parse5'
 
 const file = await read('example.html')
 const p5ast = parse(String(file), {sourceCodeLocationInfo: true})
-const hast = fromParse5(p5ast, file)
+const hast = fromParse5(p5ast, {file})
 
 console.log(inspect(hast))
 ```
@@ -118,7 +118,7 @@ root[2] (1:1-2:1, 0-70)
 This package exports the identifier [`fromParse5`][fromparse5].
 There is no default export.
 
-### `fromParse5(tree[, file|options])`
+### `fromParse5(tree[, options])`
 
 Transform a `parse5` AST to hast.
 
@@ -126,8 +126,6 @@ Transform a `parse5` AST to hast.
 
 *   `tree` ([`Parse5Node`][parse5-node])
     — `parse5` tree to transform
-*   `file` ([`VFile`][vfile], optional)
-    — corresponding file (treated as `{file: file}`)
 *   `options` ([`Options`][options], optional)
     — configuration
 
@@ -326,7 +324,7 @@ abide by its terms.
 
 [hast-node]: https://github.com/syntax-tree/hast#nodes
 
-[fromparse5]: #fromparse5tree-fileoptions
+[fromparse5]: #fromparse5tree-options
 
 [options]: #options
 

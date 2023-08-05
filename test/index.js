@@ -93,136 +93,6 @@ test('fromParse5', async function (t) {
     })
   })
 
-  await t.test('should accept a file as options', async function () {
-    assert.deepEqual(
-      fromParse5(parse(String(file), {sourceCodeLocationInfo: true}), file),
-      {
-        type: 'root',
-        children: [
-          {
-            type: 'element',
-            tagName: 'html',
-            properties: {},
-            children: [
-              {
-                type: 'element',
-                tagName: 'head',
-                properties: {},
-                children: [
-                  {
-                    type: 'element',
-                    tagName: 'title',
-                    properties: {},
-                    children: [
-                      {
-                        type: 'text',
-                        value: 'Hello!',
-                        position: {
-                          start: {line: 1, column: 8, offset: 7},
-                          end: {line: 1, column: 14, offset: 13}
-                        }
-                      }
-                    ],
-                    position: {
-                      start: {line: 1, column: 1, offset: 0},
-                      end: {line: 1, column: 22, offset: 21}
-                    }
-                  }
-                ]
-              },
-              {
-                type: 'element',
-                tagName: 'body',
-                properties: {},
-                children: [
-                  {
-                    type: 'element',
-                    tagName: 'h1',
-                    properties: {},
-                    children: [
-                      {
-                        type: 'text',
-                        value: 'World!',
-                        position: {
-                          start: {line: 1, column: 26, offset: 25},
-                          end: {line: 1, column: 32, offset: 31}
-                        }
-                      }
-                    ],
-                    position: {
-                      start: {line: 1, column: 22, offset: 21},
-                      end: {line: 1, column: 32, offset: 31}
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        data: {quirksMode: true},
-        position: {
-          start: {line: 1, column: 1, offset: 0},
-          end: {line: 1, column: 32, offset: 31}
-        }
-      }
-    )
-  })
-
-  await t.test(
-    'should accept a file as options (without location info)',
-    async function () {
-      assert.deepEqual(fromParse5(parse(String(file)), file), {
-        type: 'root',
-        children: [
-          {
-            type: 'element',
-            tagName: 'html',
-            properties: {},
-            children: [
-              {
-                type: 'element',
-                tagName: 'head',
-                properties: {},
-                children: [
-                  {
-                    type: 'element',
-                    tagName: 'title',
-                    properties: {},
-                    children: [
-                      {
-                        type: 'text',
-                        value: 'Hello!'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'element',
-                tagName: 'body',
-                properties: {},
-                children: [
-                  {
-                    type: 'element',
-                    tagName: 'h1',
-                    properties: {},
-                    children: [
-                      {
-                        type: 'text',
-                        value: 'World!'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        data: {quirksMode: true}
-      })
-    }
-  )
-
   await t.test('should support synthetic locations', async function () {
     assert.deepEqual(
       fromParse5(
@@ -246,7 +116,7 @@ test('fromParse5', async function (t) {
             startOffset: 0
           }
         },
-        file
+        {file}
       ),
       {
         type: 'element',
@@ -295,7 +165,7 @@ test('fromParse5', async function (t) {
               startOffset: 0
             }
           },
-          file
+          {file}
         ),
         {
           type: 'element',
