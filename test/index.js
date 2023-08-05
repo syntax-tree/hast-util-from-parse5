@@ -1,6 +1,6 @@
 /**
  * @typedef {import('vfile').VFile} VFile
- * @typedef {import('../lib/index.js').Node} Node
+ * @typedef {import('hast').Nodes} Nodes
  *
  * @typedef Config
  * @property {VFile} file
@@ -398,7 +398,7 @@ test('fixtures', async () => {
       sourceCodeLocationInfo: true
     })
     const actual = fromParse5(input, {file: options.file, verbose: true})
-    /** @type {Node} */
+    /** @type {Nodes} */
     let expected
 
     try {
@@ -422,7 +422,7 @@ test('fixtures', async () => {
   async function checkNoYes(options) {
     const input = parse(String(options.file))
     const actual = fromParse5(input, {file: options.file, verbose: true})
-    /** @type {Node} */
+    /** @type {Nodes} */
     const expected = JSON.parse(String(await fs.readFile(options.out)))
 
     clean(expected)
@@ -442,7 +442,7 @@ test('fixtures', async () => {
       sourceCodeLocationInfo: true
     })
     const actual = fromParse5(input)
-    /** @type {Node} */
+    /** @type {Nodes} */
     const expected = JSON.parse(String(await fs.readFile(options.out)))
 
     clean(expected)
@@ -460,7 +460,7 @@ test('fixtures', async () => {
   async function checkNoNo(options) {
     const input = parse(String(options.file))
     const actual = fromParse5(input)
-    /** @type {Node} */
+    /** @type {Nodes} */
     const expected = JSON.parse(String(await fs.readFile(options.out)))
 
     clean(expected)
@@ -474,7 +474,7 @@ test('fixtures', async () => {
 })
 
 /**
- * @param {Node} tree
+ * @param {Nodes} tree
  */
 function clean(tree) {
   visit(tree, (node) => {
