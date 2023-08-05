@@ -86,6 +86,12 @@
   "xo": {
     "overrides": [
       {
+        "files": "**/*.ts",
+        "rules": {
+          "@typescript-eslint/consistent-type-definitions": "off"
+        }
+      },
+      {
         "files": "test/**/*.js",
         "rules": {
           "no-await-in-loop": "off"
