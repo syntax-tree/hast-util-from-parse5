@@ -15,19 +15,20 @@
 import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import test from 'node:test'
+import {fromParse5} from 'hast-util-from-parse5'
 import {isHidden} from 'is-hidden'
 import {parse, parseFragment} from 'parse5'
 import {read, toVFile} from 'to-vfile'
 import {visit} from 'unist-util-visit'
-import {fromParse5} from '../index.js'
 
 test('fromParse5', async function (t) {
   const file = toVFile({value: '<title>Hello!</title><h1>World!'})
 
   await t.test('should expose the public api', async function () {
-    assert.deepEqual(Object.keys(await import('../index.js')).sort(), [
-      'fromParse5'
-    ])
+    assert.deepEqual(
+      Object.keys(await import('hast-util-from-parse5')).sort(),
+      ['fromParse5']
+    )
   })
 
   await t.test('should transform a complete document', async function () {
