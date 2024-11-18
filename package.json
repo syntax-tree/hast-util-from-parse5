@@ -35,7 +35,7 @@
     "@types/hast": "^3.0.0",
     "@types/unist": "^3.0.0",
     "devlop": "^1.0.0",
-    "hastscript": "^8.0.0",
+    "hastscript": "^9.0.0",
     "property-information": "^6.0.0",
     "vfile": "^6.0.0",
     "vfile-location": "^5.0.0",
