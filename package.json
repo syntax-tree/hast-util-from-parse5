@@ -78,7 +78,7 @@
     "strict": true
   },
   "type": "module",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "xo": {
     "overrides": [
       {
