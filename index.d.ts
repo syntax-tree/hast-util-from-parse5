@@ -1,8 +1,41 @@
 import type {Position} from 'unist'
-
-export type {Options, Space} from './lib/index.js'
+import type {VFile} from 'vfile'
 
 export {fromParse5} from './lib/index.js'
+
+/**
+ * Configuration.
+ */
+export interface Options {
+  /**
+   * File used to add positional info to nodes (optional).
+   *
+   * If given, the file should represent the original HTML source.
+   */
+  file?: VFile | null | undefined
+
+  /**
+   * Which space the document is in (default: `'html'`).
+   *
+   * When an `<svg>` element is found in the HTML space, this package already
+   * automatically switches to and from the SVG space when entering and exiting
+   * it.
+   */
+  space?: Space | null | undefined
+
+  /**
+   * Whether to add extra positional info about starting tags, closing tags,
+   * and attributes to elements (default: `false`).
+   *
+   * > 👉 **Note**: only used when `file` is given.
+   */
+  verbose?: boolean | null | undefined
+}
+
+/**
+ * Namespace.
+ */
+export type Space = 'html' | 'svg'
 
 // Register data on hast.
 declare module 'hast' {
