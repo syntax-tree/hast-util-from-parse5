@@ -1,9 +1,7 @@
 /**
- * @typedef {import('hast').Nodes} Nodes
- *
- * @typedef {import('parse5').html.NS} NS
- *
- * @typedef {import('vfile').VFile} VFile
+ * @import {Nodes} from 'hast'
+ * @import {html as Html} from 'parse5'
+ * @import {VFile} from 'vfile'
  */
 
 /**
@@ -101,7 +99,7 @@ test('fromParse5', async function (t) {
           nodeName: 'title',
           tagName: 'title',
           attrs: [],
-          namespaceURI: /** @type {NS} */ ('http://www.w3.org/1999/xhtml'),
+          namespaceURI: /** @type {Html.NS} */ ('http://www.w3.org/1999/xhtml'),
           childNodes: [
             {
               nodeName: '#text',
@@ -143,7 +141,9 @@ test('fromParse5', async function (t) {
             nodeName: 'p',
             tagName: 'p',
             attrs: [],
-            namespaceURI: /** @type {NS} */ ('http://www.w3.org/1999/xhtml'),
+            namespaceURI: /** @type {Html.NS} */ (
+              'http://www.w3.org/1999/xhtml'
+            ),
             childNodes: [
               {
                 nodeName: '#text',
