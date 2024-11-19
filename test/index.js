@@ -245,6 +245,34 @@ test('fromParse5', async function (t) {
       }
     )
   })
+
+  await t.test('should handle unknown attributes', async function () {
+    assert.deepEqual(
+      fromParse5(parseFragment('<button type="other" disabled>Hello</button>')),
+      {
+        type: 'root',
+        children: [
+          {
+            type: 'element',
+            tagName: 'button',
+            properties: {
+              type: 'other',
+              disabled: true
+            },
+            children: [
+              {
+                type: 'text',
+                value: 'Hello'
+              }
+            ]
+          }
+        ],
+        data: {
+          quirksMode: false
+        }
+      }
+    )
+  })
 })
 
 test('fixtures', async function (t) {
