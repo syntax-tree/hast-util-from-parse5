@@ -9,7 +9,7 @@
     "@types/unist": "^3.0.0",
     "devlop": "^1.0.0",
     "hastscript": "^9.0.0",
-    "property-information": "^6.0.0",
+    "property-information": "^7.0.0",
     "vfile": "^6.0.0",
     "vfile-location": "^5.0.0",
     "web-namespaces": "^2.0.0"
