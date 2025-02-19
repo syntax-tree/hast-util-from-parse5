@@ -44,7 +44,8 @@ utility and `parse5` to both parse HTML and generate hast from it.
 ## Install
 
 This package is [ESM only][github-gist-esm].
-In Node.js (version 16+), install with [npm][npmjs-install]:
+In Node.js (version 16+),
+install with [npm][npmjs-install]:
 
 ```sh
 npm install hast-util-from-parse5
@@ -120,9 +121,11 @@ Transform a `parse5` AST to hast.
 
 ###### Parameters
 
-* `tree` ([`Parse5Node`][github-parse5-node])
+* `tree`
+  ([`Parse5Node`][github-parse5-node])
   — `parse5` tree to transform
-* `options` ([`Options`][api-options], optional)
+* `options`
+  ([`Options`][api-options], optional)
   — configuration
 
 ###### Returns
@@ -140,22 +143,27 @@ Configuration (TypeScript type).
 File used to add positional info to nodes
 ([`VFile`][github-vfile], optional).
 
-If given, the file should represent the original HTML source.
+If given,
+the file should represent the original HTML source.
 
 ###### `space`
 
-Which space the document is in ([`Space`][api-space], default: `'html'`).
+Which space the document is in
+([`Space`][api-space], default: `'html'`).
 
-When an `<svg>` element is found in the HTML space, this package already
-automatically switches to and from the SVG space when entering and exiting
-it.
+When an `<svg>` element is found in the HTML space,
+this package already automatically switches to and from the SVG space when
+entering and exiting it.
 
 ###### `verbose`
 
-Whether to add extra positional info about starting tags, closing tags,
-and attributes to elements (`boolean`, default: `false`).
+Whether to add extra positional info about starting tags,
+closing tags,
+and attributes to elements
+(`boolean`, default: `false`).
 
-> 👉 **Note**: only used when `file` is given.
+> 👉 **Note**:
+> only used when `file` is given.
 
 For the following HTML:
 
@@ -222,9 +230,10 @@ It exports the additional types [`Options`][api-options] and
 Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
 
-When we cut a new major release, we drop support for unmaintained versions of
-Node.
-This means we try to keep the current release line, `hast-util-from-parse5@^8`,
+When we cut a new major release,
+we drop support for unmaintained versions of Node.
+This means we try to keep the current release line,
+`hast-util-from-parse5@8`,
 compatible with Node.js 16.
 
 ## Security
@@ -256,8 +265,9 @@ for ways to get started.
 See [`support.md`][health-support] for ways to get help.
 
 This project has a [code of conduct][health-coc].
-By interacting with this repository, organization, or community you agree to
-abide by its terms.
+By interacting with this repository,
+organization,
+or community you agree to abide by its terms.
 
 ## License
 
