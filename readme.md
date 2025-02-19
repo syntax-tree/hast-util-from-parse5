@@ -1,14 +1,12 @@
 # hast-util-from-parse5
 
-[![Build][build-badge]][build]
-[![Coverage][coverage-badge]][coverage]
-[![Downloads][downloads-badge]][downloads]
-[![Size][size-badge]][size]
-[![Sponsors][sponsors-badge]][collective]
-[![Backers][backers-badge]][collective]
-[![Chat][chat-badge]][chat]
+[![Build][badge-build-image]][badge-build-url]
+[![Coverage][badge-coverage-image]][badge-coverage-url]
+[![Downloads][badge-downloads-image]][badge-downloads-url]
+[![Size][badge-size-image]][badge-size-url]
 
-[hast][] utility to transform from [`parse5`][parse5]s AST.
+[hast][github-hast] utility to transform from the
+[`parse5`][github-parse5] AST.
 
 ## Contents
 
@@ -36,17 +34,17 @@ This package is a utility that can turn a parse5 tree into a hast tree.
 You can use this package when using `parse5` as an HTML parser and wanting to
 work with hast.
 
-The utility [`hast-util-to-parse5`][hast-util-to-parse5] does the inverse of
-this utility.
+The utility [`hast-util-to-parse5`][github-hast-util-to-parse5] does the
+inverse of this utility.
 It generates `parse5`s AST again.
 
-The utility [`hast-util-from-html`][hast-util-from-html] wraps this utility and
-`parse5` to both parse HTML and generate hast from it.
+The utility [`hast-util-from-html`][github-hast-util-from-html] wraps this
+utility and `parse5` to both parse HTML and generate hast from it.
 
 ## Install
 
-This package is [ESM only][esm].
-In Node.js (version 16+), install with [npm][]:
+This package is [ESM only][github-gist-esm].
+In Node.js (version 16+), install with [npm][npmjs-install]:
 
 ```sh
 npm install hast-util-from-parse5
@@ -122,14 +120,14 @@ Transform a `parse5` AST to hast.
 
 ###### Parameters
 
-* `tree` ([`Parse5Node`][parse5-node])
+* `tree` ([`Parse5Node`][github-parse5-node])
   — `parse5` tree to transform
 * `options` ([`Options`][api-options], optional)
   — configuration
 
 ###### Returns
 
-hast tree ([`HastNode`][hast-node]).
+hast tree ([`HastNode`][github-hast-nodes]).
 
 ### `Options`
 
@@ -139,7 +137,8 @@ Configuration (TypeScript type).
 
 ###### `file`
 
-File used to add positional info to nodes ([`VFile`][vfile], optional).
+File used to add positional info to nodes
+([`VFile`][github-vfile], optional).
 
 If given, the file should represent the original HTML source.
 
@@ -231,11 +230,11 @@ compatible with Node.js 16.
 ## Security
 
 Use of `hast-util-from-parse5` can open you up to a
-[cross-site scripting (XSS)][xss] attack if Parse5’s AST is unsafe.
+[cross-site scripting (XSS)][wikipedia-xss] attack if Parse5’s AST is unsafe.
 
 ## Related
 
-* [`hast-util-to-parse5`](https://github.com/syntax-tree/hast-util-to-parse5)
+* [`hast-util-to-parse5`][github-hast-util-to-parse5]
   — transform hast to Parse5’s AST
 * [`hast-util-to-nlcst`](https://github.com/syntax-tree/hast-util-to-nlcst)
   — transform hast to nlcst
@@ -250,84 +249,76 @@ Use of `hast-util-from-parse5` can open you up to a
 
 ## Contribute
 
-See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
-ways to get started.
-See [`support.md`][support] for ways to get help.
+See [`contributing.md`][health-contributing]
+in
+[`syntax-tree/.github`][health]
+for ways to get started.
+See [`support.md`][health-support] for ways to get help.
 
-This project has a [code of conduct][coc].
+This project has a [code of conduct][health-coc].
 By interacting with this repository, organization, or community you agree to
 abide by its terms.
 
 ## License
 
-[MIT][license] © [Titus Wormer][author]
+[MIT][file-license] © [Titus Wormer][wooorm]
 
 <!-- Definitions -->
-
-[build-badge]: https://github.com/syntax-tree/hast-util-from-parse5/workflows/main/badge.svg
-
-[build]: https://github.com/syntax-tree/hast-util-from-parse5/actions
-
-[coverage-badge]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-parse5.svg
-
-[coverage]: https://codecov.io/github/syntax-tree/hast-util-from-parse5
-
-[downloads-badge]: https://img.shields.io/npm/dm/hast-util-from-parse5.svg
-
-[downloads]: https://www.npmjs.com/package/hast-util-from-parse5
-
-[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=hast-util-from-parse5
-
-[size]: https://bundlejs.com/?q=hast-util-from-parse5
-
-[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
-
-[backers-badge]: https://opencollective.com/unified/backers/badge.svg
-
-[collective]: https://opencollective.com/unified
-
-[chat-badge]: https://img.shields.io/badge/chat-discussions-success.svg
-
-[chat]: https://github.com/syntax-tree/unist/discussions
-
-[npm]: https://docs.npmjs.com/cli/install
-
-[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
-
-[esmsh]: https://esm.sh
-
-[typescript]: https://www.typescriptlang.org
-
-[license]: license
-
-[author]: https://wooorm.com
-
-[health]: https://github.com/syntax-tree/.github
-
-[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
-
-[support]: https://github.com/syntax-tree/.github/blob/main/support.md
-
-[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
-
-[xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
-
-[parse5]: https://github.com/inikulin/parse5
-
-[parse5-node]: https://github.com/inikulin/parse5/blob/master/packages/parse5/lib/tree-adapters/default.ts
-
-[vfile]: https://github.com/vfile/vfile
-
-[hast-util-to-parse5]: https://github.com/syntax-tree/hast-util-to-parse5
-
-[hast]: https://github.com/syntax-tree/hast
-
-[hast-util-from-html]: https://github.com/syntax-tree/hast-util-from-html
-
-[hast-node]: https://github.com/syntax-tree/hast#nodes
 
 [api-from-parse5]: #fromparse5tree-options
 
 [api-options]: #options
 
 [api-space]: #space-1
+
+[badge-build-image]: https://github.com/syntax-tree/hast-util-from-parse5/workflows/main/badge.svg
+
+[badge-build-url]: https://github.com/syntax-tree/hast-util-from-parse5/actions
+
+[badge-coverage-image]: https://img.shields.io/codecov/c/github/syntax-tree/hast-util-from-parse5.svg
+
+[badge-coverage-url]: https://codecov.io/github/syntax-tree/hast-util-from-parse5
+
+[badge-downloads-image]: https://img.shields.io/npm/dm/hast-util-from-parse5.svg
+
+[badge-downloads-url]: https://www.npmjs.com/package/hast-util-from-parse5
+
+[badge-size-image]: https://img.shields.io/bundlejs/size/hast-util-from-parse5
+
+[badge-size-url]: https://bundlejs.com/?q=hast-util-from-parse5
+
+[esmsh]: https://esm.sh
+
+[file-license]: license
+
+[github-gist-esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[github-hast]: https://github.com/syntax-tree/hast
+
+[github-hast-nodes]: https://github.com/syntax-tree/hast#nodes
+
+[github-hast-util-from-html]: https://github.com/syntax-tree/hast-util-from-html
+
+[github-hast-util-to-parse5]: https://github.com/syntax-tree/hast-util-to-parse5
+
+[github-parse5]: https://github.com/inikulin/parse5
+
+[github-parse5-node]: https://github.com/inikulin/parse5/blob/master/packages/parse5/lib/tree-adapters/default.ts
+
+[github-vfile]: https://github.com/vfile/vfile
+
+[health]: https://github.com/syntax-tree/.github
+
+[health-coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
+
+[health-contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
+
+[health-support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[npmjs-install]: https://docs.npmjs.com/cli/install
+
+[typescript]: https://www.typescriptlang.org
+
+[wikipedia-xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
+
+[wooorm]: https://wooorm.com
