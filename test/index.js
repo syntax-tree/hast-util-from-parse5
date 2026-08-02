@@ -246,6 +246,38 @@ test('fromParse5', async function (t) {
     )
   })
 
+  await t.test(
+    'should not treat a foreign-namespace `template` as a content owner',
+    async function () {
+      // Only an HTML-namespace `template` has a `content` fragment. In the SVG
+      // and MathML namespaces it is an ordinary foreign element, and reading
+      // `content` off it used to throw.
+      assert.deepEqual(
+        fromParse5(parseFragment('<svg><template></template></svg>')),
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'svg',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'template',
+                  properties: {},
+                  children: [],
+                  content: {type: 'root', children: []}
+                }
+              ]
+            }
+          ],
+          data: {quirksMode: false}
+        }
+      )
+    }
+  )
+
   await t.test('should handle unknown attributes', async function () {
     assert.deepEqual(
       fromParse5(parseFragment('<button type="other" disabled>Hello</button>')),
