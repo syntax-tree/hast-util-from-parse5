@@ -233,6 +233,51 @@ test('fromParse5', async function (t) {
     )
   })
 
+  await t.test(
+    'should not crash on a `template` in the svg or mathml namespace',
+    async function () {
+      assert.deepEqual(fromParse5(parseFragment('<svg><template>')), {
+        type: 'root',
+        children: [
+          {
+            type: 'element',
+            tagName: 'svg',
+            properties: {},
+            children: [
+              {
+                type: 'element',
+                tagName: 'template',
+                properties: {},
+                children: []
+              }
+            ]
+          }
+        ],
+        data: {quirksMode: false}
+      })
+
+      assert.deepEqual(fromParse5(parseFragment('<math><template>')), {
+        type: 'root',
+        children: [
+          {
+            type: 'element',
+            tagName: 'math',
+            properties: {},
+            children: [
+              {
+                type: 'element',
+                tagName: 'template',
+                properties: {},
+                children: []
+              }
+            ]
+          }
+        ],
+        data: {quirksMode: false}
+      })
+    }
+  )
+
   await t.test('should ignore prototypal props', async function () {
     assert.deepEqual(
       fromParse5(parseFragment('<x constructor y />'), {space: 'svg'}),
