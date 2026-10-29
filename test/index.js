@@ -6,8 +6,11 @@
 
 /**
  * @typedef Config
+ *   Configuration for a fixture.
  * @property {VFile} file
+ *   Input file.
  * @property {URL} out
+ *   URL to expected output.
  */
 
 import assert from 'node:assert/strict'
@@ -275,6 +278,7 @@ test('fromParse5', async function (t) {
   })
 })
 
+// eslint-disable-next-line node-test/require-assertion -- assertions are in `check*` helpers.
 test('fixtures', async function (t) {
   const base = new URL('fixtures/', import.meta.url)
   const folders = await fs.readdir(base)
@@ -300,7 +304,12 @@ test('fixtures', async function (t) {
 })
 
 /**
+ * Check with positional info in `parse5` and with `verbose`.
+ *
  * @param {Config} options
+ *   Configuration.
+ * @returns {Promise<undefined>}
+ *   Nothing.
  */
 async function checkYesYes(options) {
   const input = parse(String(options.file), {
@@ -326,7 +335,12 @@ async function checkYesYes(options) {
 }
 
 /**
+ * Check without positional info in `parse5` and with `verbose`.
+ *
  * @param {Config} options
+ *   Configuration.
+ * @returns {Promise<undefined>}
+ *   Nothing.
  */
 async function checkNoYes(options) {
   const input = parse(String(options.file))
@@ -344,7 +358,12 @@ async function checkNoYes(options) {
 }
 
 /**
+ * Check with positional info in `parse5` and without `verbose`.
+ *
  * @param {Config} options
+ *   Configuration.
+ * @returns {Promise<undefined>}
+ *   Nothing.
  */
 async function checkYesNo(options) {
   const input = parse(String(options.file), {
@@ -364,7 +383,12 @@ async function checkYesNo(options) {
 }
 
 /**
+ * Check without positional info in `parse5` and without `verbose`.
+ *
  * @param {Config} options
+ *   Configuration.
+ * @returns {Promise<undefined>}
+ *   Nothing.
  */
 async function checkNoNo(options) {
   const input = parse(String(options.file))
@@ -382,7 +406,12 @@ async function checkNoNo(options) {
 }
 
 /**
+ * Remove positional info and verbose data.
+ *
  * @param {Nodes} tree
+ *   Tree to clean.
+ * @returns {undefined}
+ *   Nothing.
  */
 function clean(tree) {
   visit(tree, function (node) {
