@@ -236,6 +236,78 @@ test('fromParse5', async function (t) {
     )
   })
 
+  await t.test(
+    'should support a `template` in SVG as a normal element',
+    async function () {
+      assert.deepEqual(
+        fromParse5(
+          parseFragment('<svg><template><circle></circle></template>')
+        ),
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'svg',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'template',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'circle',
+                      properties: {},
+                      children: []
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          data: {quirksMode: false}
+        }
+      )
+    }
+  )
+
+  await t.test(
+    'should support a `template` in MathML as a normal element',
+    async function () {
+      assert.deepEqual(
+        fromParse5(parseFragment('<math><template><mi>x</mi></template>')),
+        {
+          type: 'root',
+          children: [
+            {
+              type: 'element',
+              tagName: 'math',
+              properties: {},
+              children: [
+                {
+                  type: 'element',
+                  tagName: 'template',
+                  properties: {},
+                  children: [
+                    {
+                      type: 'element',
+                      tagName: 'mi',
+                      properties: {},
+                      children: [{type: 'text', value: 'x'}]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          data: {quirksMode: false}
+        }
+      )
+    }
+  )
+
   await t.test('should ignore prototypal props', async function () {
     assert.deepEqual(
       fromParse5(parseFragment('<x constructor y />'), {space: 'svg'}),
